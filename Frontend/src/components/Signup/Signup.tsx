@@ -1,38 +1,95 @@
-
+// import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+//   const navigate = useNavigate();
+
+//   const handleSignin = () => {
+//     navigate("/Signin");
+//   };
+
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-2 ">Sign up</h1>
-      <span className="text-gray-500 text-sm ">Sign up to enjoy the feature of HD</span>
+      <h1 className="text-3xl font-bold mb-1 ">Sign up</h1>
+      <span className="text-gray-500 text-sm ">
+        Sign up to enjoy the feature of HD
+      </span>
 
-      <form action="" className="mt-8 ">
+      <form action="" className="mt-6 ">
         <div className="flex flex-col mb-5 relative ">
-            <label className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] " htmlFor="name">Your Name</label>
-            <input id="name" className="border-[1px] border-gray-400 rounded-lg py-2 px-3 " type="text" placeholder="Enter your name" />
+          <label
+            className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
+            htmlFor="name"
+          >
+            Your Name
+          </label>
+          <input
+            id="name"
+            className="border-[1px] border-gray-400 rounded-lg py-2 px-3 "
+            type="text"
+            placeholder="Enter your name"
+          />
         </div>
         <div className="flex flex-col mb-5 relative ">
-            <label className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] " htmlFor="birth-date">Date of Birth</label>
-            <input id="birth-date" className="border-[1px] border-gray-400 rounded-lg py-2 px-3 " type="date" placeholder="Enter your name" />
+          <label
+            className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
+            htmlFor="birth-date"
+          >
+            Date of Birth
+          </label>
+          <input
+            id="birth-date"
+            className="border-[1px] border-gray-400 rounded-lg py-2 px-3 "
+            type="date"
+            placeholder="Enter your name"
+          />
         </div>
         <div className="flex flex-col mb-5 relative ">
-            <label className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] " htmlFor="email">Your Email</label>
-            <input id="email" className="border-[1px] border-gray-400 rounded-lg py-2 px-3 " type="email" placeholder="Enter your name" />
+          <label
+            className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
+            htmlFor="email"
+          >
+            Your Email
+          </label>
+          <input
+            id="email"
+            className="border-[1px] border-gray-400 rounded-lg py-2 px-3 "
+            type="email"
+            placeholder="Enter your name"
+          />
         </div>
         <div className="flex flex-col mb-5 relative ">
-            <label className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] " htmlFor="password">OTP</label>
-            <input id="password" className="border-[1px] border-gray-400 rounded-lg py-2 px-3 " type="password" placeholder="Enter your name" />
+          <label
+            className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
+            htmlFor="password"
+          >
+            OTP
+          </label>
+          <input
+            id="password"
+            className="border-[1px] border-gray-400 rounded-lg py-2 px-3 "
+            type="password"
+            placeholder="Enter your name"
+          />
         </div>
 
-        <button className="bg-blue-500 p-2 w-full text-white rounded-lg cursor-pointer " type="submit">Submit</button>
+        <button
+          className="bg-blue-500 p-2 w-full text-white rounded-lg cursor-pointer "
+          type="submit"
+        >
+          Submit
+        </button>
       </form>
 
-      <div className="flex justify-center mt-5 ">
-        <span className="text-gray-500 text-sm me-2">Already have an account??</span>
-        <span className="text-sm font-semibold text-blue-600 underline cursor-pointer ">Sign in</span>
-      </div>
+      {/* <div className="flex justify-center mt-5 ">
+        <span className="text-gray-500 text-sm me-2">
+          Already have an account??
+        </span>
+        <span onClick={handleSignin} className="text-sm font-semibold text-blue-600 underline cursor-pointer ">
+          Sign in
+        </span>
+      </div> */}
     </div>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;
