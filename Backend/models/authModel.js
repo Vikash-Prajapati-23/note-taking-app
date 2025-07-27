@@ -1,0 +1,48 @@
+import mongoose from "mongoose";
+
+// Creating Scheema.
+const authSchema = new mongoose.Schema(
+  {
+    // userId: {
+    //   type: String,
+    //   required: true,
+    //   unique: true,
+    // },
+    fullName: {
+      type: String,
+      required: true,
+    },
+    dob: {
+      type: Date,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    avatar: {
+      type: String, // For profile picture provided by Google.
+    },
+    provider: {
+      type: String, // google0 or email or otp etc.
+      enum: ["google", "local"],
+      default: "local",
+    },
+    otp: {
+      type: String,
+      required: function () {
+        return this.provider === "local";
+      },
+    },
+    otpExpiresAt: {
+      type: Date,
+      required: function () {
+        return this.provider === "local";
+      },
+    },
+  },
+  { timestamps: true }
+);
+
+// Export auth model.
+export const authModel = mongoose.model("auth", authSchema);
