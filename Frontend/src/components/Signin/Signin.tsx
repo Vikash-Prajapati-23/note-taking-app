@@ -1,12 +1,6 @@
-// import { useNavigate } from "react-router-dom"
 
 
 const Signin = () => {
-  // const navigate = useNavigate();
-
-  // const handleSignup = () => {
-  //   navigate("/Signup");
-  // }
 
   return (
     <div>
@@ -25,11 +19,6 @@ const Signin = () => {
 
         <button className="bg-blue-500 p-2 w-full text-white rounded-lg cursor-pointer " type="submit">Submit</button>
       </form>
-
-      {/* <div className="flex justify-center mt-5 ">
-        <span className="text-gray-500 text-sm me-2">Need an account??</span>
-        <span onClick={handleSignup} className="text-sm font-semibold text-blue-600 underline cursor-pointer ">Create one</span>
-      </div> */}
     </div>
   )
 }

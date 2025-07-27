@@ -1,11 +1,12 @@
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-//   const navigate = useNavigate();
+    const navigate = useNavigate();
 
-//   const handleSignin = () => {
-//     navigate("/Signin");
-//   };
+    const handleNavigate = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        navigate("/Note");
+    }
 
   return (
     <div>
@@ -14,7 +15,7 @@ const Signup = () => {
         Sign up to enjoy the feature of HD
       </span>
 
-      <form action="" className="mt-6 ">
+      <form onSubmit={handleNavigate} className="mt-6 ">
         <div className="flex flex-col mb-5 relative ">
           <label
             className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
@@ -73,21 +74,13 @@ const Signup = () => {
         </div>
 
         <button
+        // onClick={handleNavigate}
           className="bg-blue-500 p-2 w-full text-white rounded-lg cursor-pointer "
           type="submit"
         >
           Submit
         </button>
       </form>
-
-      {/* <div className="flex justify-center mt-5 ">
-        <span className="text-gray-500 text-sm me-2">
-          Already have an account??
-        </span>
-        <span onClick={handleSignin} className="text-sm font-semibold text-blue-600 underline cursor-pointer ">
-          Sign in
-        </span>
-      </div> */}
     </div>
   );
 };

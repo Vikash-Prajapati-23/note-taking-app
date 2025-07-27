@@ -1,21 +1,23 @@
 import "./App.css";
-import Home from "./components/Home/Home";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Signup from "./components/Signup/Signup";
-import Signin from "./components/Signin/Signin";
+// import Signup from "./components/Signup/Signup";
+// import Signin from "./components/Signin/Signin";
+import Account from "./components/Account/Account";
+import Note from "./components/Note/Note";
 
 function App() {
   return (
     <>
-      <div className="h-screen flex justify-center items-center ">
+      {/* <div> */}
         <Router>
           <Routes>
-            <Route path="/" element={ <Home /> } />
-            <Route path="/Signup" element={ <Signup /> } />
-            <Route path="/Signin" element={ <Signin /> } />
+            <Route path="/" element={ <Account /> } />
+            <Route path="/Note" element={ <Note /> } />
+            {/* <Route path="/Signup" element={ <Signup /> } />
+            <Route path="/Signin" element={ <Signin /> } /> */}
           </Routes>
         </Router>
-      </div>
+      {/* </div> */}
     </>
   );
 }
