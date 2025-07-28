@@ -1,16 +1,7 @@
-import { Request, Response } from "express";
-import { authModel } from "../../src/models/authModel";
+import { authModel } from "../models/authModel";
 import { createToken } from "../service/jwtTokens";
 
- // change from Date to string
-interface User {
-  userId: string;
-  fullName: string;
-  email: string;
-  dob: string;
-}
-
-export async function handleSignUp(req: Request, res: Response) {
+export async function handleSignUp(req, res) {
   const { fullName, email, dob } = req.body;
 
   try {

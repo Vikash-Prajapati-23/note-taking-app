@@ -1,11 +1,11 @@
 {
   "name": "your-project-name",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "src/index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only --loader ts-node/esm src/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "type": "module"
   },
   "dependencies": {
     "cookie-parser": "^1.4.7",
@@ -20,13 +20,6 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "@types/cookie-parser": "^1.4.9",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^24.1.0",
-    "nodemon": "^3.1.10",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.8.3"
+    "nodemon": "^3.1.10"
   }
 }

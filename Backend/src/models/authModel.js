@@ -31,7 +31,7 @@ const authSchema = new mongoose.Schema(
     },
     otp: {
       type: String,
-      required: function (this: any) {
+      required: function () {
         return this.provider === "local";
       },
     },

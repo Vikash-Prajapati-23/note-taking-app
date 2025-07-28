@@ -3,15 +3,11 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-import { connectToMongoDB } from "./connectMongoDbURL";
+import { connectToMongoDB } from "./connectMongoDbURL.js";
 
 dotenv.config();
 
-const mongoUrl = process.env.MONGODB_URL;
-if (!mongoUrl) {
-  throw new Error("MONGODB_URL environment variable is not set.");
-}
-connectToMongoDB(mongoUrl);
+connectToMongoDB(process.env.MONGODB_URL);
 
 const PORT = process.env.PORT || 3001;
 
