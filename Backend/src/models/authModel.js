@@ -29,18 +29,6 @@ const authSchema = new mongoose.Schema(
       enum: ["google", "local"],
       default: "local",
     },
-    otp: {
-      type: String,
-      required: function () {
-        return this.provider === "local";
-      },
-    },
-    // otpExpiresAt: {
-    //   type: Date,
-    //   required: function () {
-    //     return this.provider === "local";
-    //   },
-    // },
   },
   { timestamps: true }
 );

@@ -1,9 +1,9 @@
-import * as dotenv from "dotenv";
+import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
 import { connectToMongoDB } from "./connectMongoDbURL.js";
+import authRoues from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -39,7 +39,11 @@ app.get("/", (req, res) => {
   res.send("✅ Backend Root Route Working!");
 });
 
-// app.use();
+app.use("/api/auth", authRoues);
+
+app.get("/api/auth/test", (req, res) => {
+  res.send("Auth route working!");
+});
 
 app.listen(PORT, () => {
   console.log(`Server is running at the port: ${PORT}`);

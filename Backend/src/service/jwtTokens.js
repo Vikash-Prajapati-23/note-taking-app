@@ -3,19 +3,13 @@ import jwt from "jsonwebtoken";
 
 dotenv.config();
 
-const secret = process.env.JWT_SECRET_TOKEN as string;
-if (!secret) {
-  throw new Error("JWT_SECRET_TOKEN environment variable is not set.");
-}
+const secret = process.env.JWT_SECRET_TOKEN;
+// if (!secret) {
+//   throw new Error("JWT_SECRET_TOKEN environment variable is not set.");
+// }
 
-interface User {
-  userId: String;
-  fullName: String,
-  email: String;
-  dob: String;
-}
 
-export function createToken(user: User) {
+export function createToken(user) {
   return jwt.sign(
     {
       userId: user.userId,
@@ -30,7 +24,7 @@ export function createToken(user: User) {
   );
 }
 
-export function verifyToken(token: string) {
+export function verifyToken(token) {
   try {
     const decode = jwt.verify(token, secret);
     return decode;
