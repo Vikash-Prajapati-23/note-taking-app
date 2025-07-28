@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const Signin = () => {
-  const [isOtp, setIsOtp] = useState(false);
+  const [isOtp] = useState(false);
 
   return (
     <div>
