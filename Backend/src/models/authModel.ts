@@ -3,17 +3,18 @@ import mongoose from "mongoose";
 // Creating Scheema.
 const authSchema = new mongoose.Schema(
   {
-    // userId: {
-    //   type: String,
-    //   required: true,
-    //   unique: true,
-    // },
+    userId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     fullName: {
       type: String,
       required: true,
     },
     dob: {
-      type: Date,
+      type: String,
+      required: true,
     },
     email: {
       type: String,
@@ -34,12 +35,12 @@ const authSchema = new mongoose.Schema(
         return this.provider === "local";
       },
     },
-    otpExpiresAt: {
-      type: Date,
-      required: function () {
-        return this.provider === "local";
-      },
-    },
+    // otpExpiresAt: {
+    //   type: Date,
+    //   required: function () {
+    //     return this.provider === "local";
+    //   },
+    // },
   },
   { timestamps: true }
 );
