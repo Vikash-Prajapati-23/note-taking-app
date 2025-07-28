@@ -1,4 +1,5 @@
 import { authModel } from "../models/authModel.js";
+import { OtpModel } from "../models/otpModel.js";
 import { generateOTP } from "../service/generateOtp.js";
 import { createToken } from "../service/jwtTokens.js";
 import { sendOtpToEmail } from "../service/sendOtp.js";
@@ -9,7 +10,7 @@ export const sendOtp = async (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ message: "Email is required" });
 
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = generateOTP();
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
 
     // Store or update OTP
@@ -20,11 +21,7 @@ export const sendOtp = async (req, res) => {
     );
 
     // Optionally: Send OTP to email (comment this if you're testing)
-    await transporter.sendMail({
-      to: email,
-      subject: "Your OTP Code",
-      html: `<h2>Your OTP is: ${otp}</h2>`,
-    });
+    await sendOtpToEmail();
 
     res.status(200).json({ message: "OTP sent successfully" });
   } catch (error) {
