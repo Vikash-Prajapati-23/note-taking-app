@@ -3,69 +3,65 @@ import { generateOTP } from "../service/generateOtp.js";
 import { createToken } from "../service/jwtTokens.js";
 import { sendOtpToEmail } from "../service/sendOtp.js";
 
+// POST /api/auth/send-otp
 export const sendOtp = async (req, res) => {
-  const { fullName, email, dob } = req.body;
-
   try {
-    const exists = await authModel.findOne({ email });
-    if (exists) return res.status(409).json({ message: "Email already exists" });
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Email is required" });
 
-    const otp = generateOTP();
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 min expiry
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
 
+    // Store or update OTP
     await OtpModel.findOneAndUpdate(
       { email },
-      { otp, expiresAt },
-      { upsert: true, new: true }
+      { email, otp, expiresAt },
+      { upsert: true }
     );
 
-    await sendOtpToEmail(email, otp);
+    // Optionally: Send OTP to email (comment this if you're testing)
+    await transporter.sendMail({
+      to: email,
+      subject: "Your OTP Code",
+      html: `<h2>Your OTP is: ${otp}</h2>`,
+    });
 
-    return res.status(200).json({ message: "OTP sent to email", fullName, email });
-  } catch (err) {
-    console.error("Send OTP Error:", err);
-    return res.status(500).json({ message: "Server error", err });
+    res.status(200).json({ message: "OTP sent successfully" });
+  } catch (error) {
+    console.error("Send OTP error:", error.message);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
-export async function verifyOtpAndSignUp(req, res) {
-  const { fullName, email, dob, otp } = req.body;
 
+// POST /api/auth/verify-otp
+export const verifyOtp = async (req, res) => {
   try {
-    const otpEntry = await OtpModel.findOne({ email });
-    if (!otpEntry || otpEntry.otp !== otp) {
-      return res.status(400).json({ message: "Invalid OTP" });
+    const { email, otp, fullName, dob } = req.body;
+
+    const existing = await OtpModel.findOne({ email });
+    if (!existing || existing.otp !== otp || existing.expiresAt < new Date()) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
     }
 
-    if (otpEntry.expiresAt < new Date()) {
-      await OtpModel.deleteOne({ email });
-      return res.status(400).json({ message: "OTP expired" });
-    }
+    // Create new user
+    const user = await authModel.create({ fullName, email, dob });
 
-    const newUser = await authModel.create({ fullName, email, dob });
+    // Optionally: delete OTP after verification
+    await OtpModel.deleteOne({ email });
 
-    const token = createToken({
-      userId: newUser._id.toString(),
-      fullName,
-      email,
-      dob,
-    });
-
+    // Issue token
+    const token = createToken({ userId: user._id, fullName, email, dob });
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite:  process.env.NODE_ENV === "production" ? "None" : "lax",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      sameSite: "lax",
+      secure: false,
     });
 
-    await OtpModel.deleteOne({ email }); // clear OTP entry
-
-    return res.status(200).json({
-      message: "Signup successful!",
-      user: { fullName, email, dob },
-    });
-  } catch (err) {
-    console.error("Verify OTP Error:", err);
-    return res.status(500).json({ message: "Server error", err });
+    res.status(200).json({ message: "Signup successful" });
+  } catch (error) {
+    console.error("OTP Verification error:", error.message);
+    res.status(500).json({ message: "Server error" });
   }
-}
+};
+

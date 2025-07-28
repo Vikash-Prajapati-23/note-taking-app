@@ -92,9 +92,9 @@
 
 // export default Signup;
 
-
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "sonner";
 
 // Access your base URL like this:
 const baseUrl = import.meta.env.VITE_BASE_URL;
@@ -135,10 +135,13 @@ const SignupForm: React.FC = () => {
         email: formData.email,
         dob: formData.dob,
       });
+      toast.success("OTP verified successfully!");
+      // toast("Processing your request...")
 
       setMessage((res.data as { message: string }).message);
       setStep("otp"); // Move to OTP input step
     } catch (error: any) {
+      toast.error("Invalid OTP, please try again.");
       setMessage(error?.response?.data?.message || "Failed to send OTP");
     } finally {
       setLoading(false);
