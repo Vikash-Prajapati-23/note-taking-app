@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // import Signup from "./components/Signup/Signup";
 // import Signin from "./components/Signin/Signin";
 import Account from "./components/Account/Account";
-import Note from "./components/Note/Note";
+import Note from "./components/Note/Note.tsx";
 
 function App() {
   return (
