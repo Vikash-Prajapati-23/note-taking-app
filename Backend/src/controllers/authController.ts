@@ -2,6 +2,14 @@ import { Request, Response } from "express";
 import { authModel } from "../../src/models/authModel";
 import { createToken } from "../service/jwtTokens";
 
+ // change from Date to string
+interface User {
+  userId: string;
+  fullName: string;
+  email: string;
+  dob: string;
+}
+
 export async function handleSignUp(req: Request, res: Response) {
   const { fullName, email, dob } = req.body;
 
@@ -19,6 +27,7 @@ export async function handleSignUp(req: Request, res: Response) {
 
     const token = createToken({
       userId: newUser._id.toString(),
+      fullName: newUser.fullName,
       email: newUser.email,
       dob: newUser.dob,
     });
@@ -26,7 +35,7 @@ export async function handleSignUp(req: Request, res: Response) {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      sameSite: "Lax",
+      sameSite: "lax",
     });
 
     return res.status(200).json({

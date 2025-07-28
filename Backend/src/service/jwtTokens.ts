@@ -9,15 +9,17 @@ if (!secret) {
 }
 
 interface User {
-  userId: string;
-  email: string;
-  dob: Date;
+  userId: String;
+  fullName: String,
+  email: String;
+  dob: String;
 }
 
 export function createToken(user: User) {
   return jwt.sign(
     {
       userId: user.userId,
+      fullName: user.fullName,
       email: user.email,
       dob: user.dob,
     },

@@ -7,9 +7,13 @@ import { connectToMongoDB } from "./connectMongoDbURL";
 
 dotenv.config();
 
-connectToMongoDB(process.env.MONGODB_URL);
+const mongoUrl = process.env.MONGODB_URL;
+if (!mongoUrl) {
+  throw new Error("MONGODB_URL environment variable is not set.");
+}
+connectToMongoDB(mongoUrl);
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001;
 
 // Creating server.
 const app = express();
@@ -41,4 +45,6 @@ app.get("/", (req, res) => {
 
 // app.use();
 
-app.listen(PORT, () => { console.log(`Server is running at the port: ${PORT}`) });
+app.listen(PORT, () => {
+  console.log(`Server is running at the port: ${PORT}`);
+});

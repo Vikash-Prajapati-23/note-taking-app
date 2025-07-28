@@ -25,13 +25,13 @@ const authSchema = new mongoose.Schema(
       type: String, // For profile picture provided by Google.
     },
     provider: {
-      type: String, // google0 or email or otp etc.
+      type: String, // google or local
       enum: ["google", "local"],
       default: "local",
     },
     otp: {
       type: String,
-      required: function () {
+      required: function (this: any) {
         return this.provider === "local";
       },
     },
