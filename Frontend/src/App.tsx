@@ -2,8 +2,8 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // import Signup from "./components/Signup/Signup";
 // import Signin from "./components/Signin/Signin";
-import Account from "./components/Account/Account.tsx";
-import Note from "./components/Note/Note.tsx";
+import Account from "./components/Account/Account";
+import Note from "./components/Note/Note";
 
 
 function App() {
