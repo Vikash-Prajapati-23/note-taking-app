@@ -10,8 +10,7 @@
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "moduleDetection": "force",
+    "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
 
@@ -19,9 +18,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
 
     /* Import alias for ShadCN */
     "baseUrl": ".",
@@ -29,8 +26,6 @@
       "@/*": ["src/*"]
     },
 
-    /* 👇 Add these two lines */
-    "allowJs": false,
     "resolveJsonModule": true
   },
   "include": ["src"]
