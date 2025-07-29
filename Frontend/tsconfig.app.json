@@ -27,7 +27,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+
+    /* 👇 Add these two lines */
+    "allowJs": false,
+    "resolveJsonModule": true
   },
   "include": ["src"]
 }
