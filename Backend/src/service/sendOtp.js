@@ -1,18 +1,23 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+import dotenv from "dotenv";
 
-export async function sendOtpToEmail(email, otp) {
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.OTP_EMAIL,
-      pass: process.env.OTP_PASS,
-    },
-  });
+dotenv.config();
 
-  await transporter.sendMail({
-    from: `"Note App" <${process.env.OTP_EMAIL}>`,
-    to: email,
-    subject: "Your OTP for Signup",
-    html: `<p>Your OTP is <b>${otp}</b>. It will expire in 5 minutes.</p>`,
-  });
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+export async function sendOTPEmail(toEmail, otp) {
+  try {
+    const data = await resend.emails.send({
+      from: "Note App <onboarding@resend.dev>",
+      to: toEmail,
+      subject: 'Your OTP Code',
+      html: `<p>Your OTP code is: <strong>${otp}</strong>. It's valid only for 5 minuts.</p>`,
+    });
+
+    console.log("Resend data:", data);
+    return { success: true, data };
+  } catch (error) {
+    console.error('Resend Error:', error);
+    return { success: false, error };
+  }
 }

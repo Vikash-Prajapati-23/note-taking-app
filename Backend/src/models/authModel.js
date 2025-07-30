@@ -5,7 +5,7 @@ const authSchema = new mongoose.Schema(
   {
     userId: {
       type: String,
-      required: true,
+      // required: true,
       unique: true,
     },
     fullName: {
@@ -21,14 +21,14 @@ const authSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    avatar: {
-      type: String, // For profile picture provided by Google.
-    },
-    provider: {
-      type: String, // google or local
-      enum: ["google", "local"],
-      default: "local",
-    },
+    // avatar: {
+    //   type: String, // For profile picture provided by Google.
+    // },
+    // provider: {
+    //   type: String, // google or local
+    //   enum: ["google", "local"],
+    //   default: "local",
+    // },
   },
   { timestamps: true }
 );

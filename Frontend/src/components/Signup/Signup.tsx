@@ -135,27 +135,28 @@ const SignupForm: React.FC = () => {
         email: formData.email,
         dob: formData.dob,
       });
-      toast.success("OTP verified successfully!");
+      toast.success("OTP sent successfully!");
       // toast("Processing your request...")
 
       setMessage((res.data as { message: string }).message);
       setStep("otp"); // Move to OTP input step
     } catch (error: any) {
-      toast.error("Invalid OTP, please try again.");
+      toast.error("Failed to send OTP, please try again.");
       setMessage(error?.response?.data?.message || "Failed to send OTP");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleVerifyOtp = async () => {
+  const handleVerifyOtp = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setLoading(true);
     try {
       const res = await axios.post(`${baseUrl}/api/auth/verify-otp`, formData);
       setMessage((res.data as { message: string }).message);
 
       // ✅ Redirect to dashboard after success
-      window.location.href = "/dashboard";
+      window.location.href = "/Note";
     } catch (error: any) {
       setMessage(error?.response?.data?.message || "OTP verification failed");
     } finally {
@@ -163,12 +164,12 @@ const SignupForm: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (step === "initial") {
       handleSendOtp();
     } else {
-      handleVerifyOtp();
+      handleVerifyOtp(e);
     }
   };
 

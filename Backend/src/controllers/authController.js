@@ -1,10 +1,10 @@
 import { authModel } from "../models/authModel.js";
 import { OtpModel } from "../models/otpModel.js";
 import { generateOTP } from "../service/generateOtp.js";
-import { createToken } from "../service/jwtTokens.js";
-import { sendOtpToEmail } from "../service/sendOtp.js";
+import { createToken, verifyToken } from "../service/jwtTokens.js";
+import { sendOTPEmail } from "../service/sendOtp.js"; 
 
-// POST /api/auth/send-otp
+
 export const sendOtp = async (req, res) => {
   try {
     const { email } = req.body;
@@ -20,18 +20,16 @@ export const sendOtp = async (req, res) => {
       { upsert: true }
     );
 
-    // Optionally: Send OTP to email (comment this if you're testing)
-    await sendOtpToEmail();
+    await sendOTPEmail(email, otp);
 
-    res.status(200).json({ message: "OTP sent successfully" });
+    return res.status(200).json({ message: "OTP sent successfully" });
   } catch (error) {
     console.error("Send OTP error:", error.message);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
 
-// POST /api/auth/verify-otp
 export const verifyOtp = async (req, res) => {
   try {
     const { email, otp, fullName, dob } = req.body;
@@ -55,7 +53,7 @@ export const verifyOtp = async (req, res) => {
       secure: false,
     });
 
-    res.status(200).json({ message: "Signup successful" });
+    return res.status(200).json({ message: "Signup successful", user });
   } catch (error) {
     console.error("OTP Verification error:", error.message);
     res.status(500).json({ message: "Server error" });
