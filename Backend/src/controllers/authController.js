@@ -49,8 +49,9 @@ export const verifyOtp = async (req, res) => {
     const token = createToken(user);
     res.cookie("authToken", token, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(200).json({ message: "Signup successful", user });
@@ -74,14 +75,14 @@ export async function handleLogin (req, res) {
     if(!user) return res.status(400).json({ message: "Email does not exist!" });
     
     const token = createToken(user);
-    console.log(token);
 
     await OtpModel.deleteOne({ email });
 
     res.cookie("authToken", token, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(200).json({ message: "Sign in successfull.!",
@@ -107,8 +108,8 @@ export function handleLogout (req, res) {
   if (token) {
     res.clearCookie("authToken", token, {
       httpOnly: true,
-      sameSite: "lax",
-      secure: false,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: process.env.NODE_ENV === "production",
     });
     return res.status(200).json({ message: "Logout successfully." });
   } else {
@@ -116,4 +117,3 @@ export function handleLogout (req, res) {
     return res.status(500).json({ message: "Internal server error." });
   }
 }
-
