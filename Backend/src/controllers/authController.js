@@ -46,8 +46,8 @@ export const verifyOtp = async (req, res) => {
     await OtpModel.deleteOne({ email });
 
     // Issue token
-    const token = createToken({ userId: user._id, fullName, email, dob });
-    res.cookie("token", token, {
+    const token = createToken(user);
+    res.cookie("authToken", token, {
       httpOnly: true,
       sameSite: "lax",
       secure: false,
@@ -59,4 +59,61 @@ export const verifyOtp = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export async function handleLogin (req, res) {
+  const { email, otp } = req.body;
+  try {
+    // Checking for otp stored in otp model. 
+    const existing = await OtpModel.findOne({ email });
+    if (!existing || existing.otp !== otp || existing.expiresAt < new Date()) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    };
+
+    // Checking for user email stored in auth model to find out if the user exists or not in the DB with this email. 
+    const user = await authModel.findOne({ email });
+    if(!user) return res.status(400).json({ message: "Email does not exist!" });
+    
+    const token = createToken(user);
+    console.log(token);
+
+    await OtpModel.deleteOne({ email });
+
+    res.cookie("authToken", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false,
+    });
+
+    return res.status(200).json({ message: "Sign in successfull.!",
+      user: {
+        userId: user._id,
+        fullName: user.fullName,
+        email: user.email,
+      },
+     });
+  } catch (error) {
+    console.log("Sign in failed.");
+    return res.status(500).json({ message: "Internal server error." });
+  }
+}
+
+export function handleLogout (req, res) {
+  const token = req.cookies.authToken;
+
+  if(!token) {
+    return res.status(400).json({ message: "Token not found." });
+  }
+
+  if (token) {
+    res.clearCookie("authToken", token, {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: false,
+    });
+    return res.status(200).json({ message: "Logout successfully." });
+  } else {
+    console.error("Logout failed.");
+    return res.status(500).json({ message: "Internal server error." });
+  }
+}
 

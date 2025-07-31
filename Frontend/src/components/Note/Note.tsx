@@ -2,6 +2,11 @@ import { useNavigate } from "react-router-dom";
 import logo from "../../assets/top-2.png";
 import delete_btn from "../../assets/delete.png";
 import "./Note.css";
+import axios from "axios";
+import { toast } from "sonner";
+
+
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 const Note = () => {
   const navigate = useNavigate();
@@ -10,8 +15,14 @@ const Note = () => {
     navigate("/Note");
   };
 
-  const handleSignout = () => {
-    navigate("/");
+  const handleSignout = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}/api/auth/handle-sign-out`,{ withCredentials: true });
+      toast.success((response.data as { message: string }).message);
+      navigate("/");
+    } catch (error) {
+      toast.error("Logout failed.");
+    }
   };
 
   return (
