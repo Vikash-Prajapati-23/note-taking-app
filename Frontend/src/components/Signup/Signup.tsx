@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+// import axios from "axios";
+// import { toast } from "sonner";
+// import { useNavigate } from "react-router-dom";
 
 // Access your base URL like this:
-const baseUrl = import.meta.env.VITE_BASE_URL;
+// const baseUrl = import.meta.env.VITE_BASE_URL;
 
 interface FormData {
   fullName: string;
@@ -12,21 +12,25 @@ interface FormData {
   dob: string;
   otp: string;
 }
+interface AccountProps {
+  step: Step;
+  handleOTP: () => Promise<void>;
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  handleSignUp: () => Promise<void>;
+}
 
 type Step = "initial" | "otp";
 
-const SignupForm: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    fullName: "",
-    email: "",
-    dob: "",
-    otp: "",
-  });
-
-  const [step, setStep] = useState<Step>("initial");
+const SignupForm: React.FC<AccountProps> = ({
+  step,
+  handleOTP,
+  formData,
+  setFormData,
+  handleSignUp,
+}) => {
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string>("");
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -37,40 +41,17 @@ const SignupForm: React.FC = () => {
 
   const handleSendOtp = async () => {
     setLoading(true);
-    try {
-      const res = await axios.post(`${baseUrl}/api/auth/send-otp`, {
-        fullName: formData.fullName,
-        email: formData.email,
-        dob: formData.dob,
-      });
-      toast.success("OTP sent successfully!");
-      // toast("Processing your request...")
-
-      setMessage((res.data as { message: string }).message);
-      setStep("otp"); // Move to OTP input step
-    } catch (error: any) {
-      toast.error("Failed to send OTP, please try again.");
-      setMessage(error?.response?.data?.message || "Failed to send OTP");
-    } finally {
-      setLoading(false);
-    }
+    handleOTP();
+    setLoading(false);
   };
 
   const handleVerifyOtp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const res = await axios.post(`${baseUrl}/api/auth/verify-otp`, formData, {
-        withCredentials: true,
-      });
-      setMessage((res.data as { message: string }).message);
-
-      navigate("/Note");
-    } catch (error: any) {
-      setMessage(error?.response?.data?.message || "OTP verification failed");
-    } finally {
-      setLoading(false);
-    }
+    handleSignUp();
+    // } finally {
+    setLoading(false);
+    // }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -175,9 +156,9 @@ const SignupForm: React.FC = () => {
             : "Verify OTP & Sign Up"}
         </button>
 
-        {message && (
+        {/* {message && (
           <p className="text-sm text-center text-red-600">{message}</p>
-        )}
+        )} */}
       </form>
     </div>
   );

@@ -5,10 +5,18 @@ import "./Note.css";
 import axios from "axios";
 import { toast } from "sonner";
 
-
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
-const Note = () => {
+interface FormData {
+  fullName: string;
+  email: string;
+}
+
+interface AccountProps {
+  formData: FormData;
+}
+
+const Note: React.FC<AccountProps> = ({ formData }) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -17,7 +25,9 @@ const Note = () => {
 
   const handleSignout = async () => {
     try {
-      const response = await axios.get(`${baseUrl}/api/auth/handle-sign-out`,{ withCredentials: true });
+      const response = await axios.get(`${baseUrl}/api/auth/handle-sign-out`, {
+        withCredentials: true,
+      });
       toast.success((response.data as { message: string }).message);
       navigate("/");
     } catch (error) {
@@ -51,17 +61,22 @@ const Note = () => {
         {/* Welcome user.  */}
         <div className="flex flex-col gap-5 ">
           <div className="md:text-5xl text-2xl font-bold md:rounded-md rounded-xl md:py-16 py-5 md:w-[800px] px-2 flex justify-center shadows">
-          <div >
-            <h1 className="mb-2">Welcome {`User`}</h1>
-            <div className="md:text-lg font-semibold">
-              Email: {`User Email`}
+            <div>
+              <h1 className="mb-2">Welcome {formData.fullName}</h1>
+              <div className="md:text-lg font-semibold">
+                Email: {formData.email}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className=" flex justify-end">
-          <button className="bg-blue-500 md:py-2 md:px-4 p-2 md:w-fit w-full text-white rounded-lg cursor-pointer " type="button">Create Note</button>
-        </div>
+          <div className=" flex justify-end">
+            <button
+              className="bg-blue-500 md:py-2 md:px-4 p-2 md:w-fit w-full text-white rounded-lg cursor-pointer "
+              type="button"
+            >
+              Create Note
+            </button>
+          </div>
         </div>
 
         {/* Notes.  */}

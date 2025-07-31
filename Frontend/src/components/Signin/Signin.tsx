@@ -6,38 +6,35 @@ import { useNavigate } from "react-router-dom";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
 interface FormData {
+  fullName: string;
   email: string;
+  dob: string;
   otp: string;
 }
 
-type Step = "initial" | "opt";
+interface AccountProps {
+  step: Step;
+  handleOTP: () => Promise<void>;
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+}
 
-const Signin: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    email: "",
-    otp: "",
-  });
+type Step = "initial" | "otp";
+
+const Signin: React.FC<AccountProps> = ({
+  step,
+  handleOTP,
+  formData,
+  setFormData,
+}) => {
 
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState<Step>("initial");
   const navigate = useNavigate();
 
   const handleSendOtp = async () => {
     setLoading(true);
-    try {
-      const res = await axios.post(`${baseUrl}/api/auth/send-otp`, {
-        email: formData.email,
-      });
-      // toast.success("OTP sent successfully!");
-      // toast("Processing your request...")
-      toast.success((res.data as { message: string }).message);
-      setStep("opt"); // Move to OTP input step
-    } catch (error: any) {
-      toast.error("Failed to send OTP, please try again.");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+    handleOTP();
+    setLoading(false);
   };
 
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -52,7 +49,7 @@ const Signin: React.FC = () => {
         }
       );
       // loading;
-      
+
       navigate("/Note");
       toast.success((res.data as { message: string }).message);
     } catch (error) {
@@ -101,7 +98,7 @@ const Signin: React.FC = () => {
           />
         </div>
 
-        {step === "opt" ? (
+        {step === "otp" ? (
           <div className="flex flex-col mb-5 relative ">
             <label
               className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "

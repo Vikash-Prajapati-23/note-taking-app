@@ -14,10 +14,8 @@ export async function sendOTPEmail(toEmail, otp) {
       html: `<p>Your OTP code is: <strong>${otp}</strong>. It's valid only for 5 minuts.</p>`,
     });
 
-    console.log("Resend data:", data);
     return { success: true, data };
   } catch (error) {
-    console.error('Resend Error:', error);
     return { success: false, error };
   }
 }

@@ -4,7 +4,30 @@ import rightColumn from "../../assets/right-column.png";
 import logo from "../../assets/top.png";
 import { useState } from "react";
 
-const Account = () => {
+type Step = "initial" | "otp";
+
+interface FormData {
+  fullName: string;
+  email: string;
+  dob: string;
+  otp: string;
+}
+
+interface AccountProps {
+  step: Step;
+  handleOTP: () => Promise<void>;
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  handleSignUp: () => Promise<void>;
+}
+
+const Account: React.FC<AccountProps> = ({
+  step,
+  handleOTP,
+  formData,
+  setFormData,
+  handleSignUp,
+}) => {
   const [isSignUp, setIsSighnUp] = useState(false);
 
   const handleToggle = () => {
@@ -20,7 +43,22 @@ const Account = () => {
               <img src={logo} className="w-fit" alt="logo-image" />
             </span>
             <div className="w-[100%] lg:p-10 p-5 ">
-              {!isSignUp ? <Signup /> : <Signin />}
+              {!isSignUp ? (
+                <Signup
+                  step={step}
+                  handleOTP={handleOTP}
+                  formData={formData}
+                  setFormData={setFormData}
+                  handleSignUp={handleSignUp}
+                />
+              ) : (
+                <Signin
+                  step={step}
+                  handleOTP={handleOTP}
+                  formData={formData}
+                  setFormData={setFormData}
+                />
+              )}
 
               <div className="flex justify-center mt-5 ">
                 <span className="text-gray-500 text-sm me-2">
