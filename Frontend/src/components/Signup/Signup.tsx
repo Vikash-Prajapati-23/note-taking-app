@@ -99,11 +99,11 @@ const SignupForm: React.FC = () => {
           <input
             type="text"
             name="fullName"
-            placeholder="Full Name"
+            title="fullName"
             value={formData.fullName}
             onChange={handleChange}
             required
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded border-gray-400"
           />
         </div>
 
@@ -117,16 +117,15 @@ const SignupForm: React.FC = () => {
           <input
             type="email"
             name="email"
-            placeholder="Email"
+            title="EmailP"
             value={formData.email}
             onChange={handleChange}
             required
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded border-gray-400"
           />
         </div>
 
         <div className="flex flex-col mb-5 relative ">
-          {" "}
           <label
             className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
             htmlFor="birth-date"
@@ -135,12 +134,12 @@ const SignupForm: React.FC = () => {
           </label>
           <input
             type="date"
-            placeholder="dob"
+            title="dob"
             name="dob"
             value={formData.dob}
             onChange={handleChange}
             required
-            className="w-full border p-2 rounded"
+            className="w-full border p-2 rounded border-gray-400"
           />
         </div>
 
@@ -155,12 +154,11 @@ const SignupForm: React.FC = () => {
             <input
               type="text"
               name="otp"
-              placeholder="Enter OTP"
               title="Enter OTP"
               value={formData.otp}
               onChange={handleChange}
               required
-              className="w-full border p-2 rounded"
+              className="w-full border p-2 rounded border-gray-400"
             />
           </div>
         )}
