@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 // Creating Scheema.
 const authSchema = new mongoose.Schema(
   {
-    userId: {
-      type: String,
-      // required: true,
-      unique: true,
-    },
+    // userId: {
+    //   type: String,
+    //   // required: true,
+    //   unique: true,
+    // },
     fullName: {
       type: String,
       required: true,
