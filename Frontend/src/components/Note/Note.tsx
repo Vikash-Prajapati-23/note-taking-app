@@ -4,19 +4,23 @@ import delete_btn from "../../assets/delete.png";
 import "./Note.css";
 import axios from "axios";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
 interface FormData {
   fullName: string;
   email: string;
+  dob: string;
+  otp: string;
 }
 
 interface AccountProps {
   formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
 }
 
-const Note: React.FC<AccountProps> = ({ formData }) => {
+const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
@@ -34,6 +38,24 @@ const Note: React.FC<AccountProps> = ({ formData }) => {
       toast.error("Logout failed.");
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await axios.get<{
+        userData: { fullName: string; email: string };
+      }>(`${baseUrl}/api/auth/me`, {
+        withCredentials: true,
+      });
+      const { fullName, email } = res.data.userData;
+      setFormData((prev) => ({
+        ...prev,
+        fullName,
+        email,
+      }));
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div>

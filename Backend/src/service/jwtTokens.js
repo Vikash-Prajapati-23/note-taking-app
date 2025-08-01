@@ -12,7 +12,7 @@ const secret = process.env.JWT_SECRET_TOKEN;
 export function createToken(user) {
   return jwt.sign(
     {
-      userId: user.userId,
+      // userId: user.userId,
       fullName: user.fullName,
       email: user.email,
       dob: user.dob,

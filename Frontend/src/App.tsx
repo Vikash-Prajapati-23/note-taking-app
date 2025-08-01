@@ -74,7 +74,7 @@ function App() {
               />
             }
           />
-          <Route path="/Note" element={<Note formData={formData} />} />
+          <Route path="/Note" element={<Note formData={formData} setFormData={setFormData} />} />
         </Routes>
       </Router>
     </>
