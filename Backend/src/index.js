@@ -16,7 +16,8 @@ const app = express();
 
 const allowOrigins = [
   "http://localhost:5173",
-  "https://note-taking-app-hazel-sigma.vercel.app",
+  "https://decodedev.fun",
+  "https://www.decodedev.fun",
 ];
 
 app.use(

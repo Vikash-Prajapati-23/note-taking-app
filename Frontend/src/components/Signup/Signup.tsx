@@ -1,10 +1,4 @@
 import React, { useState } from "react";
-// import axios from "axios";
-// import { toast } from "sonner";
-// import { useNavigate } from "react-router-dom";
-
-// Access your base URL like this:
-// const baseUrl = import.meta.env.VITE_BASE_URL;
 
 interface FormData {
   fullName: string;
