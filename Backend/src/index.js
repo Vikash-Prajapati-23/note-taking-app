@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { connectToMongoDB } from "./connectMongoDbURL.js";
 import authRoues from "./routes/authRoutes.js";
+import noteRoutes from "./routes/noteRoutes.js";
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoues);
+app.use("/api/notes", noteRoutes);
 
 app.get("/api/auth/test", (req, res) => {
   res.send("Auth route working!");

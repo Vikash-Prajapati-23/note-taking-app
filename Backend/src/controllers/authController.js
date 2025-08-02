@@ -40,7 +40,7 @@ export const verifyOtp = async (req, res) => {
     // Create new user
     const user = await authModel.create({ fullName, email, dob });
 
-    // Optionally: delete OTP after verification
+    // Delete OTP after verification
     await OtpModel.deleteOne({ email });
 
     // Issue token

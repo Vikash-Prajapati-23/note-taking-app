@@ -4,7 +4,7 @@ import delete_btn from "../../assets/delete.png";
 import "./Note.css";
 import axios from "axios";
 import { toast } from "sonner";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -15,6 +15,19 @@ interface FormData {
   otp: string;
 }
 
+interface NoteInput {
+  title: string;
+  discription: string;
+}
+
+interface CreateNotes {
+  message: string;
+  newNotes: {
+    title: string;
+    discription: string;
+  };
+}
+
 interface AccountProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
@@ -22,6 +35,13 @@ interface AccountProps {
 
 const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
   const navigate = useNavigate();
+  const [isNotes, setIsNotes] = useState<boolean>(false);
+  const [isCreate, setIsCreate] = useState(false); // Both syntax will work fine as typscript knows its a boolean value.
+  const [notes, setNotes] = useState<NoteInput>({
+    title: "",
+    discription: "",
+  });
+  const [addNote, setAddNote] = useState<NoteInput[]>([]);
 
   const handleNavigate = () => {
     navigate("/Note");
@@ -57,6 +77,29 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
     fetchData();
   }, []);
 
+  const handleNotes = async () => {
+    try {
+      const res = await axios.post<CreateNotes>(
+        `${baseUrl}/api/notes/create-notes`,
+        notes
+      );
+      const data = res.data.newNotes;
+      setNotes(data);
+      setAddNote((prev) => [...prev, data]);
+      setIsCreate(false);
+      setIsNotes(true);
+    } catch (error) {}
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setNotes({
+      ...notes,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
     <div>
       {/* Navbar.  */}
@@ -79,9 +122,9 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
       </header>
 
       {/* Rest of the body part.  */}
-      <div className="md:w-[800px] mt-20 mb-10 flex gap-10 mx-auto flex-col">
+      <div className="md:w-[800px] mt-16 mb-10 flex gap-6 mx-auto flex-col">
         {/* Welcome user.  */}
-        <div className="flex flex-col gap-5 ">
+        <div className="flex flex-col gap-4 ">
           <div className="md:text-5xl text-2xl font-bold md:rounded-md rounded-xl md:py-16 py-5 md:w-[800px] px-2 flex justify-center shadows">
             <div>
               <h1 className="mb-2">Welcome {formData.fullName}</h1>
@@ -91,8 +134,11 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
             </div>
           </div>
 
-          <div className=" flex justify-end">
+          <div className="flex justify-end">
             <button
+              onClick={() => {
+                setIsNotes(true), setIsCreate(true);
+              }}
               className="bg-blue-500 md:py-2 md:px-4 p-2 md:w-fit w-full text-white rounded-lg cursor-pointer "
               type="button"
             >
@@ -101,13 +147,80 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
           </div>
         </div>
 
-        {/* Notes.  */}
-        <div className="flex md:gap-3 gap-2 flex-col">
-          <h3 className="text-xl font-semibold">Notes</h3>
-          <div className="flex justify-between bg-white py-2 px-3 rounded-md border-[1px] border-gray-400 shadows ">
-            <span>Note 1</span>
-            <img src={delete_btn} alt="delete-button" />
+        {isCreate && (
+          <div className="py-3 px-3 w-full border-[1px] border-gray-400 shadows rounded-md">
+            <form className="flex flex-col gap-4" action="">
+              <div className="flex flex-col relative w-full">
+                <label
+                  className="text-gray-500 absolute text-xs px-1 bg-white top-[-22%] left-[1%] "
+                  htmlFor="name"
+                >
+                  title
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  title="title"
+                  value={notes.title}
+                  onChange={handleChange}
+                  required
+                  className="border p-2 rounded border-gray-400"
+                />
+              </div>
+
+              <div className="flex flex-col mb-0 relative ">
+                <label
+                  className="text-gray-500 absolute text-xs px-1 bg-white top-[-14%] left-[1%] "
+                  htmlFor="name"
+                >
+                  Note
+                </label>
+                <textarea
+                  name="discription"
+                  title="discription"
+                  value={notes.discription}
+                  onChange={handleChange}
+                  required
+                  className="border p-2 rounded border-gray-400"
+                />
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  onClick={() => {
+                    setIsCreate(false), setIsNotes(true), handleNotes();
+                  }}
+                  className="bg-blue-500 md:py-1 p-2 md:px-3 md:w-fit w-full text-white rounded-lg cursor-pointer"
+                  type="button"
+                >
+                  Save
+                </button>
+              </div>
+            </form>
           </div>
+        )}
+
+        {/* Notes.  */}
+        <div className="flex md:gap-3 gap-2 flex-col bg-white p-1 rounded-md ">
+          <h3 className="text-xl ms-2 font-semibold">Notes</h3>
+
+          {!isNotes ? (
+            <p className="py-3 text-center border-[1px] border-gray-400 shadows rounded-md">
+              Your notes will appear here.
+            </p>
+          ) : (
+            <div className="flex md:flex-row flex-col  gap-5">
+              {addNote.map((noteList, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between px-3 py-2 border-[1px] border-gray-400 shadows rounded-md"
+                >
+                  <span> {noteList.title} </span>
+                  <img src={delete_btn} alt="delete-button" />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
