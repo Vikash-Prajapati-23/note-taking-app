@@ -35,7 +35,7 @@ interface AccountProps {
 
 const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
   const navigate = useNavigate();
-  const [isNotes, setIsNotes] = useState<boolean>(false);
+  // const [isNotes, setIsNotes] = useState<boolean>(false);
   const [isCreate, setIsCreate] = useState(false); // Both syntax will work fine as typscript knows its a boolean value.
   const [notes, setNotes] = useState<NoteInput>({
     title: "",
@@ -77,6 +77,18 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchNotes = async () => {
+      const res = await axios.get<{
+        userNotes: { title: string; description: string }[];
+      }>(`${baseUrl}/api/notes/fetch-notes`, { withCredentials: true });
+      const fetchedNotes = res.data.userNotes;
+      setAddNote(fetchedNotes);
+    };
+
+    fetchNotes();
+  }, []);
+
   const handleNotes = async () => {
     try {
       const res = await axios.post<CreateNotes>(
@@ -89,7 +101,7 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
       setNotes(data);
       setAddNote((prev) => [...prev, data]);
       setIsCreate(false);
-      setIsNotes(true);
+      // setIsNotes(true);
     } catch (error) {
       console.error("Error saving note:", error);
     }
@@ -146,7 +158,7 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
           <div className="flex justify-end">
             <button
               onClick={() => {
-                setIsNotes(true),
+                // setIsNotes(true),
                   setIsCreate(true),
                   setNotes((prev) => ({
                     ...prev,
@@ -216,12 +228,12 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
         <div className="flex md:gap-3 gap-2 flex-col bg-white p-1 rounded-md ">
           <h3 className="text-xl ms-2 font-semibold">Notes</h3>
 
-          {!isNotes ? (
+          {addNote === null ? (
             <p className="py-3 text-center border-[1px] border-gray-400 shadows rounded-md">
               Your notes will appear here.
             </p>
           ) : (
-            <div className="flex md:flex-row flex-col  gap-5">
+            <div className="flex flex-col gap-5">
               {addNote.map((noteList, index) => (
                 <div
                   key={index}

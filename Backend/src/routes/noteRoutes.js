@@ -9,7 +9,7 @@ import { authMiddelware } from "../middlewares/authMiddelware.js";
 const router = express.Router();
 
 router.post("/create-notes", authMiddelware, createNotes);
-router.get("/create-notes", authMiddelware, fetchNotes);
-router.get("/create-notes", authMiddelware, deleteNotes);
+router.get("/fetch-notes", authMiddelware, fetchNotes);
+router.get("/delete-notes", authMiddelware, deleteNotes);
 
 export default router;
