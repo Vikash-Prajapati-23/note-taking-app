@@ -39,13 +39,10 @@ const SignupForm: React.FC<AccountProps> = ({
     setLoading(false);
   };
 
-  const handleVerifyOtp = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleVerifyOtp = async () => {
     setLoading(true);
     handleSignUp();
-    // } finally {
     setLoading(false);
-    // }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -53,7 +50,7 @@ const SignupForm: React.FC<AccountProps> = ({
     if (step === "initial") {
       handleSendOtp();
     } else {
-      handleVerifyOtp(e);
+      handleVerifyOtp();
     }
   };
 

@@ -17,14 +17,14 @@ interface FormData {
 
 interface NoteInput {
   title: string;
-  discription: string;
+  description: string;
 }
 
 interface CreateNotes {
   message: string;
   newNotes: {
     title: string;
-    discription: string;
+    description: string;
   };
 }
 
@@ -39,7 +39,7 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
   const [isCreate, setIsCreate] = useState(false); // Both syntax will work fine as typscript knows its a boolean value.
   const [notes, setNotes] = useState<NoteInput>({
     title: "",
-    discription: "",
+    description: "",
   });
   const [addNote, setAddNote] = useState<NoteInput[]>([]);
 
@@ -81,14 +81,23 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
     try {
       const res = await axios.post<CreateNotes>(
         `${baseUrl}/api/notes/create-notes`,
-        notes
+        notes,
+        { withCredentials: true }
       );
+
       const data = res.data.newNotes;
       setNotes(data);
       setAddNote((prev) => [...prev, data]);
       setIsCreate(false);
       setIsNotes(true);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Error saving note:", error);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    handleNotes();
   };
 
   const handleChange = (
@@ -137,7 +146,13 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
           <div className="flex justify-end">
             <button
               onClick={() => {
-                setIsNotes(true), setIsCreate(true);
+                setIsNotes(true),
+                  setIsCreate(true),
+                  setNotes((prev) => ({
+                    ...prev,
+                    title: "",
+                    description: "",
+                  }));
               }}
               className="bg-blue-500 md:py-2 md:px-4 p-2 md:w-fit w-full text-white rounded-lg cursor-pointer "
               type="button"
@@ -149,7 +164,7 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
 
         {isCreate && (
           <div className="py-3 px-3 w-full border-[1px] border-gray-400 shadows rounded-md">
-            <form className="flex flex-col gap-4" action="">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col relative w-full">
                 <label
                   className="text-gray-500 absolute text-xs px-1 bg-white top-[-22%] left-[1%] "
@@ -176,9 +191,9 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
                   Note
                 </label>
                 <textarea
-                  name="discription"
-                  title="discription"
-                  value={notes.discription}
+                  name="description"
+                  title="description"
+                  value={notes.description}
                   onChange={handleChange}
                   required
                   className="border p-2 rounded border-gray-400"
@@ -187,11 +202,8 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
 
               <div className="flex justify-end">
                 <button
-                  onClick={() => {
-                    setIsCreate(false), setIsNotes(true), handleNotes();
-                  }}
                   className="bg-blue-500 md:py-1 p-2 md:px-3 md:w-fit w-full text-white rounded-lg cursor-pointer"
-                  type="button"
+                  type="submit"
                 >
                   Save
                 </button>
@@ -213,7 +225,7 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
               {addNote.map((noteList, index) => (
                 <div
                   key={index}
-                  className="flex justify-between px-3 py-2 border-[1px] border-gray-400 shadows rounded-md"
+                  className="flex justify-between gap-4 px-3 py-2 border-[1px] border-gray-400 shadows rounded-md"
                 >
                   <span> {noteList.title} </span>
                   <img src={delete_btn} alt="delete-button" />

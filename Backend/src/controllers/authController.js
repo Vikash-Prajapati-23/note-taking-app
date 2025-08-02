@@ -87,7 +87,6 @@ export async function handleLogin(req, res) {
     return res.status(200).json({
       message: "Sign in successfull.!",
       user: {
-        // userId: user._id,
         fullName: user.fullName,
         email: user.email,
       },
