@@ -159,11 +159,11 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
       {/* Rest of the body part.  */}
       <div className="md:w-[800px] md:mt-16 mt-10 mb-10 flex gap-6 mx-auto flex-col">
         {/* Welcome user.  */}
-        <div className="flex flex-col gap-4 px-3">
-          <div className="font-bold md:rounded-md rounded-lg md:py-16 py-5 md:w-[800px] px-2 flex justify-center shadows">
+        <div className="flex flex-col gap-4 px-5">
+          <div className="font-bold md:rounded-md rounded-lg md:py-16 py-5 md:w-[760px] px-2 flex justify-center shadows">
             <div>
-              <h1 className="mb-2 md:text-5xl text-lg">Welcome, {formData.fullName}!</h1>
-              <div className="md:text-lg text-sm font-semibold">
+              <h1 className="mb-2 md:text-4xl text-base">Welcome, {formData.fullName}!</h1>
+              <div className="md:text-lg text-xs font-semibold">
                 Email: {formData.email}
               </div>
             </div>
