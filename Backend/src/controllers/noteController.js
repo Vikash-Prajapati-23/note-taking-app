@@ -40,6 +40,7 @@ export async function deleteNotes(req, res) {
   const userId = req.user.userId;
   const noteId = req.params.id;
   try {
+    // Check if the note's _id exists in the userId.
     const noteID = await notesModel.findById({ _id: noteId, userId });
     if (!noteID) return res.status(401).json({ message: "Note not found." });
 
@@ -53,3 +54,7 @@ export async function deleteNotes(req, res) {
     return res.status(500).json({ message: "Internal server error.", error });
   };
 };
+
+export async function editNotes(req, res) {
+  
+}

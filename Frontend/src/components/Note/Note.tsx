@@ -13,13 +13,13 @@ interface FormData {
   email: string;
   dob: string;
   otp: string;
-};
+}
 
 interface NoteInput {
   _id: string;
   title: string;
   description: string;
-};
+}
 
 interface CreateNotes {
   message: string;
@@ -28,12 +28,12 @@ interface CreateNotes {
     title: string;
     description: string;
   };
-};
+}
 
 interface AccountProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
-};
+}
 
 const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
   const navigate = useNavigate();
@@ -45,6 +45,8 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
     description: "",
   });
   const [addNote, setAddNote] = useState<NoteInput[]>([]);
+  const [expandedNoteId, setExpandedNoteId] = useState<string | null>(null);
+  const [isEdit, setIsEdit] = useState(true);
 
   const handleNavigate = () => {
     navigate("/Note");
@@ -92,7 +94,21 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
     fetchNotes();
   }, []);
 
-  const handleNotes = async () => {
+  const handleDeleteNotes = async (notesId: string) => {
+    try {
+      const res = await axios.delete(
+        `${baseUrl}/api/notes/delete-notes/${notesId}`,
+        { withCredentials: true }
+      );
+      setAddNote((prev) => prev.filter((note) => note._id !== notesId));
+      toast.success("Note deleted successfully.!");
+    } catch (error) {
+      toast.error("Failed to delete Notes.");
+    }
+  };
+
+  const handleCreateNotes = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       const res = await axios.post<CreateNotes>(
         `${baseUrl}/api/notes/create-notes`,
@@ -108,23 +124,7 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
     }
   };
 
-  const handleDeleteNotes = async (notesId: string) => {
-    try {
-      const res = await axios.delete(
-        `${baseUrl}/api/notes/delete-notes/${notesId}`,
-        { withCredentials: true }
-      );
-      setAddNote(prev => prev.filter(note => note._id !== notesId));
-      toast.success("Note deleted successfully.!");
-    } catch (error) {
-      toast.error("Failed to delete Notes.");
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    handleNotes();
-  };
+  const handleEdit = () => {};
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -133,6 +133,14 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
       ...notes,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const toggleShowNotes = (noteId: string) => {
+    setExpandedNoteId((prevId) => (prevId === noteId ? null : noteId));
+  };
+
+  const handleToggleEdit = () => {
+    setIsEdit((edit) => (edit = !edit));
   };
 
   return (
@@ -157,12 +165,14 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
       </header>
 
       {/* Rest of the body part.  */}
-      <div className="md:w-[800px] md:mt-16 mt-10 mb-10 flex gap-6 mx-auto flex-col">
+      <div className="md:w-[800px] md:mt-16 my-10 flex gap-6 mx-auto flex-col">
         {/* Welcome user.  */}
-        <div className="flex flex-col gap-4 px-5">
-          <div className="font-bold md:rounded-md rounded-lg md:py-16 py-5 md:w-[760px] px-2 flex justify-center shadows">
+        <div className="flex flex-col gap-4 lg:px-0 md:px-10 px-3 w-full">
+          <div className="font-bold md:rounded-md rounded-lg md:py-16 py-5 lg:w-[800px] px-2 flex justify-center shadows">
             <div>
-              <h1 className="mb-2 md:text-4xl text-base">Welcome, {formData.fullName}!</h1>
+              <h1 className="mb-2 md:text-4xl text-base">
+                Welcome, {formData.fullName}!
+              </h1>
               <div className="md:text-lg text-xs font-semibold">
                 Email: {formData.email}
               </div>
@@ -188,11 +198,14 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
         </div>
 
         {isCreate && (
-          <div className="py-3 px-3 w-full border-[1px] border-gray-400 shadows rounded-md">
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <div className="flex flex-col relative w-full">
+          <div className="py-3 lg:mx-0 md:mx-10 mx-4 border-[1px] border-gray-400 shadows rounded-md">
+            <form
+              onSubmit={handleCreateNotes}
+              className="flex flex-col gap-4 px-3"
+            >
+              <div className="flex flex-col relative">
                 <label
-                  className="text-gray-500 absolute text-xs px-1 bg-white top-[-22%] left-[1%] "
+                  className="text-gray-500 absolute text-xs px-1 bg-white top-[-22%] md:left-[1%] left-[2%] "
                   htmlFor="name"
                 >
                   title
@@ -210,7 +223,7 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
 
               <div className="flex flex-col mb-0 relative ">
                 <label
-                  className="text-gray-500 absolute text-xs px-1 bg-white top-[-14%] left-[1%] "
+                  className="text-gray-500 absolute text-xs px-1 bg-white top-[-14%] md:left-[1%] left-[2%] "
                   htmlFor="name"
                 >
                   Note
@@ -237,28 +250,129 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
           </div>
         )}
 
-        {/* Notes.  */}
-        <div className="flex md:gap-3 gap-2 flex-col bg-white p-1 rounded-md px-4">
+        {/* Notes section.  */}
+        <div className="flex md:gap-3 gap-2 lg:mx-0 md:mx-10 mx-3 flex-col bg-white rounded-md ">
           <h3 className="text-xl ms-2 font-semibold">Notes</h3>
 
           {addNote === null ? (
-            <p className="py-3 text-center border-[1px] border-gray-400 shadows rounded-md">
+            <p className="py-3 text-center md:text-base text-sm border-[1px] border-gray-400 shadows rounded-md">
               Your notes will appear here.
             </p>
           ) : (
             <div className="flex flex-col gap-5">
               {addNote.map((noteList, index) => (
                 <div
+                  onClick={() => toggleShowNotes(noteList._id)}
                   key={index}
-                  className="flex justify-between gap-4 px-3 py-2 border-[1px] border-gray-400 shadows rounded-md"
+                  className={`flex flex-col gap-4 border-[1px] border-gray-400 ${
+                    expandedNoteId === noteList._id ? "shadows" : "shadow-md"
+                  } rounded-md`}
                 >
-                  <span> {noteList.title} </span>
-                  <button
-                    onClick={() => handleDeleteNotes(noteList._id)}
-                    type="button"
+                  {/* // Show Note Lists. */}
+                  <div
+                    className={`flex justify-between cursor-pointer ${
+                      expandedNoteId === noteList._id ? "shadows" : "shadow"
+                    } py-2 px-2`}
                   >
-                    <img src={delete_btn} alt="delete-button" />
-                  </button>
+                    <span className="font-semibold text-gray-500 md:text-base text-sm">
+                      {noteList.title}
+                    </span>
+                    <button
+                      className="cursor-pointer"
+                      onClick={() => handleDeleteNotes(noteList._id)}
+                      type="button"
+                    >
+                      <img src={delete_btn} alt="delete-button" />
+                    </button>
+                  </div>
+
+                  {/* // Show & Edit Notes. */}
+                  {/* {expandedNoteId === noteList._id && ( */}
+                  <div
+                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                      expandedNoteId === noteList._id
+                        ? "max-h-[1000px] opacity-100 scale-100 px-3 pb-2"
+                        : "max-h-0 opacity-0 scale-95 "
+                    }`}
+                  >
+                    {isEdit ? (
+                      <div className=" flex justify-between">
+                        {/* // Show Notes. */}
+                        <div>
+                          <p className="font-semibold"> {noteList.title} </p>
+                          <p> {noteList.description} </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                            e.stopPropagation();
+                            handleToggleEdit();
+                          }}
+                          className="flex items-start cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined">
+                            edit
+                          </span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div>
+                        {/* Edit Notes. */}
+                        <form
+                          onSubmit={handleEdit}
+                          className="flex flex-col gap-4 md:px-3"
+                        >
+                          <p>Edit Note.</p>
+                          <div className="flex flex-col relative">
+                            <label
+                              className="text-gray-500 absolute text-xs px-1 bg-white top-[-22%] md:left-[1%] left-[2%] "
+                              htmlFor="name"
+                            >
+                              title
+                            </label>
+                            <input
+                              type="text"
+                              name="title"
+                              title="title"
+                              value={noteList.title}
+                              onChange={handleChange}
+                              required
+                              className="border p-2 rounded border-gray-400"
+                            />
+                          </div>
+
+                          <div className="flex flex-col mb-0 relative ">
+                            <label
+                              className="text-gray-500 absolute text-xs px-1 bg-white top-[-14%] md:left-[1%] left-[2%] "
+                              htmlFor="name"
+                            >
+                              Note
+                            </label>
+                            <textarea
+                              name="description"
+                              title="description"
+                              value={noteList.description}
+                              onChange={handleChange}
+                              required
+                              className="border p-2 rounded border-gray-400"
+                            />
+                          </div>
+
+                          <div className="flex justify-end">
+                            <button
+                              onClick={handleToggleEdit}
+                              className="bg-blue-500 md:py-1 p-2 md:px-3 md:w-fit w-full text-white rounded-lg cursor-pointer"
+                              type="submit"
+                            >
+                              Save
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    )}
+                  </div>
+                  {/* // )} */}
                 </div>
               ))}
             </div>
