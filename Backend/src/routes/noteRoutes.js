@@ -10,6 +10,6 @@ const router = express.Router();
 
 router.post("/create-notes", authMiddelware, createNotes);
 router.get("/fetch-notes", authMiddelware, fetchNotes);
-router.get("/delete-notes", authMiddelware, deleteNotes);
+router.delete("/delete-notes/:id", authMiddelware, deleteNotes);
 
 export default router;

@@ -24,16 +24,32 @@ export async function createNotes(req, res) {
 }
 
 export async function fetchNotes(req, res) {
-    const userId = req.user.userId;
+  const userId = req.user.userId;
 
-    try {
-        const userNotes = await notesModel.find({ userId }).sort({ createdAt: -1 });
+  try {
+    const userNotes = await notesModel.find({ userId }).sort({ createdAt: -1 });
 
-        return res.status(200).json({ userNotes });
-    } catch (error) {
-        console.error(error, "error while fetching notes.");
-        return res.status(500).json({ message: "failed to fetch notes.", error });
-    };
+    return res.status(200).json({ userNotes });
+  } catch (error) {
+    console.error(error, "error while fetching notes.");
+    return res.status(500).json({ message: "failed to fetch notes.", error });
+  }
+}
+
+export async function deleteNotes(req, res) {
+  const userId = req.user.userId;
+  const noteId = req.params.id;
+  try {
+    const noteID = await notesModel.findById({ _id: noteId, userId });
+    if (!noteID) return res.status(401).json({ message: "Note not found." });
+
+    await notesModel.deleteOne({ _id: noteID });
+
+    return res.status(200).json({
+      message: "Note deleted successfully.!",
+    });
+  } catch (error) {
+    console.error("failed to delete note.", error);
+    return res.status(500).json({ message: "Internal server error.", error });
+  };
 };
-
-export async function deleteNotes(req, res) {}

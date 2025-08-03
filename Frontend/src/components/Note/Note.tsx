@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import logo from "../../assets/top-2.png";
 import delete_btn from "../../assets/delete.png";
 import "./Note.css";
@@ -13,31 +13,34 @@ interface FormData {
   email: string;
   dob: string;
   otp: string;
-}
+};
 
 interface NoteInput {
+  _id: string;
   title: string;
   description: string;
-}
+};
 
 interface CreateNotes {
   message: string;
   newNotes: {
+    _id: string;
     title: string;
     description: string;
   };
-}
+};
 
 interface AccountProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
-}
+};
 
 const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
   const navigate = useNavigate();
   // const [isNotes, setIsNotes] = useState<boolean>(false);
   const [isCreate, setIsCreate] = useState(false); // Both syntax will work fine as typscript knows its a boolean value.
   const [notes, setNotes] = useState<NoteInput>({
+    _id: "",
     title: "",
     description: "",
   });
@@ -96,14 +99,25 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
         notes,
         { withCredentials: true }
       );
-
       const data = res.data.newNotes;
       setNotes(data);
-      setAddNote((prev) => [...prev, data]);
+      setAddNote((prev) => [data, ...prev]);
       setIsCreate(false);
-      // setIsNotes(true);
     } catch (error) {
       console.error("Error saving note:", error);
+    }
+  };
+
+  const handleDeleteNotes = async (notesId: string) => {
+    try {
+      const res = await axios.delete(
+        `${baseUrl}/api/notes/delete-notes/${notesId}`,
+        { withCredentials: true }
+      );
+      setAddNote(prev => prev.filter(note => note._id !== notesId));
+      toast.success("Note deleted successfully.!");
+    } catch (error) {
+      toast.error("Failed to delete Notes.");
     }
   };
 
@@ -125,17 +139,17 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
     <div>
       {/* Navbar.  */}
       <header>
-        <nav className="flex justify-between py-2 md:px-10 ">
+        <nav className="flex justify-between py-2 md:px-10 px-2 ">
           <div onClick={handleNavigate} className="flex items-center gap-16 ">
             <img src={logo} className="cursor-pointer " alt="logo-image" />
-            <span className="md:text-lg text-xs cursor-pointer font-semibold">
+            <span className="md:text-lg text-sm cursor-pointer font-semibold">
               Dashboard
             </span>
           </div>
 
           <span
             onClick={handleSignout}
-            className="md:text-lg text-xs font-semibold text-blue-600 underline cursor-pointer "
+            className="md:text-lg text-sm font-semibold text-blue-600 underline cursor-pointer "
           >
             Sign out
           </span>
@@ -143,13 +157,13 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
       </header>
 
       {/* Rest of the body part.  */}
-      <div className="md:w-[800px] mt-16 mb-10 flex gap-6 mx-auto flex-col">
+      <div className="md:w-[800px] md:mt-16 mt-10 mb-10 flex gap-6 mx-auto flex-col">
         {/* Welcome user.  */}
-        <div className="flex flex-col gap-4 ">
-          <div className="md:text-5xl text-2xl font-bold md:rounded-md rounded-xl md:py-16 py-5 md:w-[800px] px-2 flex justify-center shadows">
+        <div className="flex flex-col gap-4 px-3">
+          <div className="font-bold md:rounded-md rounded-lg md:py-16 py-5 md:w-[800px] px-2 flex justify-center shadows">
             <div>
-              <h1 className="mb-2">Welcome {formData.fullName}</h1>
-              <div className="md:text-lg font-semibold">
+              <h1 className="mb-2 md:text-5xl text-lg">Welcome, {formData.fullName}!</h1>
+              <div className="md:text-lg text-sm font-semibold">
                 Email: {formData.email}
               </div>
             </div>
@@ -158,8 +172,7 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
           <div className="flex justify-end">
             <button
               onClick={() => {
-                // setIsNotes(true),
-                  setIsCreate(true),
+                setIsCreate(true),
                   setNotes((prev) => ({
                     ...prev,
                     title: "",
@@ -225,7 +238,7 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
         )}
 
         {/* Notes.  */}
-        <div className="flex md:gap-3 gap-2 flex-col bg-white p-1 rounded-md ">
+        <div className="flex md:gap-3 gap-2 flex-col bg-white p-1 rounded-md px-4">
           <h3 className="text-xl ms-2 font-semibold">Notes</h3>
 
           {addNote === null ? (
@@ -240,7 +253,12 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
                   className="flex justify-between gap-4 px-3 py-2 border-[1px] border-gray-400 shadows rounded-md"
                 >
                   <span> {noteList.title} </span>
-                  <img src={delete_btn} alt="delete-button" />
+                  <button
+                    onClick={() => handleDeleteNotes(noteList._id)}
+                    type="button"
+                  >
+                    <img src={delete_btn} alt="delete-button" />
+                  </button>
                 </div>
               ))}
             </div>
