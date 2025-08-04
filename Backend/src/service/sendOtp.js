@@ -11,7 +11,15 @@ export async function sendOTPEmail(toEmail, otp) {
       from: "Note App <noreply@decodedev.fun>",
       to: toEmail,
       subject: 'Your OTP Code',
-      html: `<p>Your OTP code is: <strong>${otp}</strong>. It's valid only for 5 minuts.</p>`,
+      html: `
+  <p>Hi ${toEmail},</p>
+  <p>Thanks for signing up for Note App!</p>
+  <p>Your OTP code is: <strong>${otp}</strong></p>
+  <p>This code is valid for <strong>5 minutes</strong>.</p>
+  <p>If you did not request this, please ignore this email.</p>
+  <br/>
+  <p>Vikash Prajapati.</p>
+`
     });
 
     return { success: true, data };

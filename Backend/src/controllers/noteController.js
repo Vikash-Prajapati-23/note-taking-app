@@ -52,9 +52,40 @@ export async function deleteNotes(req, res) {
   } catch (error) {
     console.error("failed to delete note.", error);
     return res.status(500).json({ message: "Internal server error.", error });
-  };
-};
+  }
+}
 
 export async function editNotes(req, res) {
-  
+  const { title, description } = req.body;
+  const userId = req.user.userId;
+  const noteId = req.params.id;
+
+  try {
+    if (!noteId) return res.status(404).json({ message: "Note not found" });
+
+    // This is like a filter.   *****
+    const updatedNotes = await notesModel.findOneAndUpdate(
+      {  // It first checks, if there is any user and noteId attached with this document/note.
+        _id: noteId,
+        userId,
+      },
+      {  // The document/note.
+        title,
+        description,
+      },
+      { new: true } // So it returns updated value always.
+    );
+
+    return res.status(200).json({
+      message: "Note edited successfully.!",
+      updatedNotes: {
+        // _id: noteId.noteID,
+        title: updatedNotes.title,
+        description: updatedNotes.description,
+      },
+    });
+  } catch (error) {
+    console.error("Error occured while upodating note.", error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
 }
