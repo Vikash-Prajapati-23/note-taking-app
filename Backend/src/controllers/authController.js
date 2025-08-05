@@ -14,9 +14,9 @@ export const sendOtp = async (req, res) => {
 
     // Store or update OTP
     await OtpModel.findOneAndUpdate(
-      { email },
-      { email, otp, expiresAt },
-      { upsert: true }
+      { email },  // Check if this email exists or not.
+      { email, otp, expiresAt },  // Update the document.
+      { upsert: true }  // Always returns the updated document.
     );
 
     await sendOTPEmail(email, otp);
@@ -126,10 +126,11 @@ export async function fetchUserData(req, res) {
     const userData = verifyToken(token);
 
     return res.status(200).json({
-      userData: {
-        fullName: userData.fullName,
-        email: userData.email,
-      },
+      // userData: {
+      //   fullName: userData.fullName,
+      //   email: userData.email,
+      // },  
+      userData,  // Sending the whole object instead of constructing it manually like above. Modern ES6.
       message: "Data sent successfully.!",
     });
   } catch (error) {

@@ -11,11 +11,13 @@ export async function createNotes(req, res) {
     return res.status(201).json({
       // Wehn we creating something we use status code 201.
       message: "Note created successfully.!",
-      newNotes: {
-        userId: newNotes.userId,
-        title: newNotes.title,
-        description: newNotes.description,
-      },
+      newNotes,  // Sending complete complete object instead of constructing it manually like below.
+      // newNotes: {
+      //   _id: newNotes._id,
+      //   userId: newNotes.userId,
+      //   title: newNotes.title,
+      //   description: newNotes.description,
+      // }
     });
   } catch (error) {
     console.error("Error while creating note.", error);
@@ -65,11 +67,13 @@ export async function editNotes(req, res) {
 
     // This is like a filter.   *****
     const updatedNotes = await notesModel.findOneAndUpdate(
-      {  // It first checks, if there is any user and noteId attached with this document/note.
+      {
+        // It first checks, if there is any user and noteId attached with this document/note.
         _id: noteId,
         userId,
       },
-      {  // The document/note.
+      {
+        // The document/note.
         title,
         description,
       },
@@ -78,11 +82,7 @@ export async function editNotes(req, res) {
 
     return res.status(200).json({
       message: "Note edited successfully.!",
-      updatedNotes: {
-        // _id: noteId.noteID,
-        title: updatedNotes.title,
-        description: updatedNotes.description,
-      },
+      updatedNotes,
     });
   } catch (error) {
     console.error("Error occured while upodating note.", error);
