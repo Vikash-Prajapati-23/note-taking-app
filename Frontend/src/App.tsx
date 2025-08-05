@@ -4,8 +4,8 @@ import Account from "./components/Account/Account";
 import Note from "./components/Note/Note";
 import axios from "axios";
 import { toast } from "sonner";
-// import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import ErrorPage from "./pages/Error/Error";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -74,7 +74,12 @@ function App() {
               />
             }
           />
-          <Route path="/Note" element={<Note formData={formData} setFormData={setFormData} />} />
+          <Route
+            path="/Note"
+            element={<Note formData={formData} setFormData={setFormData} />}
+          />
+
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </Router>
     </>
