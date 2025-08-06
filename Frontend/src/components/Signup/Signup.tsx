@@ -91,13 +91,13 @@ const SignupForm: React.FC<AccountProps> = ({
             className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
             htmlFor="birth-date"
           >
-            Email
+            Date of Birth
           </label>
           <input
-            type="email"
-            name="email"
-            title="EmailP"
-            value={formData.email}
+            type="date"
+            title="dob"
+            name="dob"
+            value={formData.dob}
             onChange={handleChange}
             required
             className="w-full border p-2 rounded border-gray-400"
@@ -109,13 +109,13 @@ const SignupForm: React.FC<AccountProps> = ({
             className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
             htmlFor="birth-date"
           >
-            Date of Birth
+            Email
           </label>
           <input
-            type="date"
-            title="dob"
-            name="dob"
-            value={formData.dob}
+            type="email"
+            name="email"
+            title="EmailP"
+            value={formData.email}
             onChange={handleChange}
             required
             className="w-full border p-2 rounded border-gray-400"
@@ -143,7 +143,13 @@ const SignupForm: React.FC<AccountProps> = ({
         )}
 
         {resendOtp && (
-          <button className="text-blue-500 underline mb-5 cursor-pointer" onClick={handleResendOtp} type="button">Resend OTP</button>
+          <button
+            className="text-blue-500 underline mb-5 cursor-pointer"
+            onClick={handleResendOtp}
+            type="button"
+          >
+            Resend OTP
+          </button>
         )}
 
         <button
