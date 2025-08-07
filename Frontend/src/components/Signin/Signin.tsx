@@ -2,21 +2,22 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
-interface FormData {
-  fullName: string;
-  email: string;
-  dob: string;
-  otp: string;
-}
+// interface FormData {
+//   fullName: string;
+//   email: string;
+//   dob: string;
+//   otp: string;
+// }
 
 interface AccountProps {
   step: Step;
   handleOTP: () => Promise<void>;
-  formData: FormData;
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  // formData: FormData;
+  // setFormData: React.Dispatch<React.SetStateAction<FormData>>;
 }
 
 type Step = "initial" | "otp";
@@ -24,10 +25,10 @@ type Step = "initial" | "otp";
 const Signin: React.FC<AccountProps> = ({
   step,
   handleOTP,
-  formData,
-  setFormData,
+  // formData,
+  // setFormData,
 }) => {
-
+  const { formData, setFormData, setIsAuthenticated, } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -48,8 +49,7 @@ const Signin: React.FC<AccountProps> = ({
           withCredentials: true,
         }
       );
-      // loading;
-
+      setIsAuthenticated(true);
       navigate("/Note");
       toast.success((res.data as { message: string }).message);
     } catch (error) {
@@ -98,7 +98,7 @@ const Signin: React.FC<AccountProps> = ({
           />
         </div>
 
-        {step === "otp" ? (
+        {step === "otp" && (
           <div className="flex flex-col mb-5 relative ">
             <label
               className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
@@ -115,20 +115,50 @@ const Signin: React.FC<AccountProps> = ({
               placeholder="Enter OTP"
             />
           </div>
-        ) : (
-          ""
         )}
 
         <button
-          className="bg-blue-500 p-2 w-full text-white rounded-lg cursor-pointer "
           disabled={loading}
           type="submit"
+          className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed  p-2 w-full text-white rounded-lg cursor-pointer haver:bg-blue-600 transition ease-in .3s"
         >
-          {loading
-            ? "Processing..."
-            : step === "initial"
-            ? "Send OTP"
-            : "Sign In"}
+          {loading ? (
+            <div className="flex justify-center">
+              <svg
+                className="animate-spin h-6 w-6"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeDasharray="32"
+                  strokeDashoffset="32"
+                >
+                  <animate
+                    attributeName="stroke-dasharray"
+                    dur="2s"
+                    values="0 32;16 16;0 32;0 32"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="stroke-dashoffset"
+                    dur="2s"
+                    values="0;-16;-32;-32"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </svg>
+            </div>
+          ) : step === "initial" ? (
+            "Send OTP"
+          ) : (
+            "Sign In"
+          )}
         </button>
       </form>
     </div>

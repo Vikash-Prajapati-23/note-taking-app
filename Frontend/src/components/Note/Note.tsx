@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import logo from "../../assets/top-2.png";
 import delete_btn from "../../assets/delete.png";
 import "./Note.css";
@@ -6,15 +6,16 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import NoteForm from "../Form/Form";
+import { useAuth } from "../../context/AuthContext";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
-interface FormData {
-  fullName: string;
-  email: string;
-  dob: string;
-  otp: string;
-}
+// interface FormData {
+//   fullName: string;
+//   email: string;
+//   dob: string;
+//   otp: string;
+// }
 
 interface NoteInput {
   _id: string;
@@ -39,12 +40,21 @@ interface CreateNotes {
   };
 }
 
-interface AccountProps {
-  formData: FormData;
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
-}
+// interface AccountProps {
+//   formData: FormData;
+//   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+//   // isAuthenticated: boolean;
+// }
 
-const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
+const Note = (
+  {
+    // formData,
+    // setFormData,
+    // isAuthenticated,
+  }
+) => {
+  const { formData, setFormData, isAuthenticated, logout } =
+    useAuth();
   const navigate = useNavigate();
   const [isCreate, setIsCreate] = useState(false);
   const [notes, setNotes] = useState<NoteInput>({
@@ -62,6 +72,10 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // if (isAuthenticated) {
+  //   return <Navigate to="/Note" replace />;
+  // }
+
   const handleNavigate = () => {
     navigate("/Note");
   };
@@ -72,7 +86,7 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
         withCredentials: true,
       });
       toast.success((response.data as { message: string }).message);
-      navigate("/");
+      logout();
     } catch (error) {
       toast.error("Logout failed.");
     }
@@ -96,6 +110,7 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
     fetchData();
   }, []);
 
+  // Notes related stuffs..!
   useEffect(() => {
     const fetchNotes = async () => {
       const res = await axios.get<{
@@ -279,61 +294,6 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
         {/* // Form for creating notes. */}
         {isCreate && (
           <div className="py-4 lg:mx-0 md:mx-10 mx-4 ">
-            {/* <form
-              onSubmit={handleCreateNotes}
-              className="flex flex-col gap-4 px-3"
-            >
-              <div className="flex flex-col relative">
-                <label
-                  className="text-gray-500 absolute text-xs px-1 bg-white top-[-22%] md:left-[1%] left-[2%] "
-                  htmlFor="title"
-                >
-                  title
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  id="title"
-                  value={notes.title}
-                  onChange={handleChange}
-                  required
-                  className="border p-2 rounded border-gray-400"
-                />
-              </div>
-
-              <div className="flex flex-col mb-0 relative ">
-                <label
-                  className="text-gray-500 absolute text-xs px-1 bg-white top-[-14%] md:left-[1%] left-[2%] "
-                  htmlFor="description"
-                >
-                  Note
-                </label>
-                <textarea
-                  name="description"
-                  id="description"
-                  value={notes.description}
-                  onChange={handleChange}
-                  required
-                  className="border p-2 rounded border-gray-400"
-                />
-              </div>
-
-              <div className="flex md:justify-end justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={() => setIsCreate(false)}
-                  className="bg-gray-500 md:py-1 p-2 md:px-3 md:w-fit w-full text-white rounded-lg cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  className="bg-blue-500 md:py-1 p-2 md:px-3 md:w-fit w-full text-white rounded-lg cursor-pointer"
-                  type="submit"
-                >
-                  Save
-                </button>
-              </div>
-            </form> */}
             <NoteForm
               mode="create"
               formData={notes}
@@ -346,7 +306,7 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
             />
           </div>
         )}
-        
+
         {/* Notes section.  */}
         <div className="flex md:gap-3 gap-2 lg:mx-0 md:mx-10 mx-3 flex-col bg-white rounded-md ">
           <h3 className="text-xl ms-2 font-semibold">Notes</h3>
@@ -397,57 +357,6 @@ const Note: React.FC<AccountProps> = ({ formData, setFormData }) => {
                     {editableNoteId === noteList._id ? (
                       <div className="bg-gray-50 rounded-md p-1 pb-2">
                         {/* Edit Notes Form */}
-                        {/* <form
-                          onSubmit={handleEditNotes}
-                          className="flex flex-col gap-4 md:px-3"
-                        >
-                          <p>Edit Note.</p>
-
-                          <div className="flex flex-col relative">
-                            <label className="text-gray-500 absolute text-xs px-1 bg-white top-[-22%] md:left-[1%] left-[2%]">
-                              Title
-                            </label>
-                            <input
-                              title="title"
-                              type="text"
-                              name="title"
-                              value={editNotes.title}
-                              onChange={handleEditChange}
-                              required
-                              className="border p-2 rounded border-gray-400"
-                            />
-                          </div>
-
-                          <div className="flex flex-col relative">
-                            <label className="text-gray-500 absolute text-xs px-1 bg-white top-[-14%] md:left-[1%] left-[2%]">
-                              Note
-                            </label>
-                            <textarea
-                              title="description"
-                              name="description"
-                              value={editNotes.description}
-                              onChange={handleEditChange}
-                              required
-                              className="border p-2 rounded border-gray-400"
-                            />
-                          </div>
-
-                          <div className="flex md:justify-end justify-between gap-2">
-                            <button
-                              type="button"
-                              onClick={() => handleToggleEdit(noteList)}
-                              className="bg-gray-500 md:py-1 p-2 md:px-3 md:w-fit w-full text-white rounded-lg"
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              type="submit"
-                              className="bg-blue-500 md:py-1 p-2 md:px-3 md:w-fit w-full text-white rounded-lg"
-                            >
-                              Save
-                            </button>
-                          </div>
-                        </form> */}
                         <NoteForm
                           mode="edit"
                           formData={editNotes}

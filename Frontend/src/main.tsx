@@ -1,14 +1,15 @@
-// src/main.tsx
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
-import { Toaster } from 'sonner'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.tsx';
+import './index.css';
+import { AuthProvider } from './context/AuthContext.tsx';
+import { Toaster } from 'sonner';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Toaster richColors position="top-center" />
-    <App />
+    <AuthProvider>
+        <Toaster />
+      <App />
+    </AuthProvider>
   </React.StrictMode>,
-)
-  
+);

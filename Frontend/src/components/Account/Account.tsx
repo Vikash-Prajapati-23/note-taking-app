@@ -3,39 +3,47 @@ import Signin from "../Signin/Signin";
 import rightColumn from "../../assets/right-column.png";
 import logo from "../../assets/top.png";
 import { useState } from "react";
+// import { useAuth } from "../../context/AuthContext";
 
 type Step = "initial" | "otp";
 
-interface FormData {
-  fullName: string;
-  email: string;
-  dob: string;
-  otp: string;
-}
+// interface FormData {
+//   fullName: string;
+//   email: string;
+//   dob: string;
+//   otp: string;
+// }
 
 interface AccountProps {
   step: Step;
   handleOTP: () => Promise<void>;
-  formData: FormData;
-  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
-  handleSignUp: () => Promise<void>;
+  // formData: FormData;
+  // setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  // handleSignUp: () => Promise<void>;
+  // isAuthenticated: boolean;
 }
 
 const Account: React.FC<AccountProps> = ({
   step,
   handleOTP,
-  formData,
-  setFormData,
-  handleSignUp,
+  // formData,
+  // setFormData,
+  // handleSignUp,
+  // isAuthenticated,
 }) => {
   const [isSignUp, setIsSighnUp] = useState(false);
+  // const { isAuthenticated, handleSignUp } = useAuth();
 
   const handleToggle = () => {
     setIsSighnUp((sign) => (sign = !sign));
   };
 
   return (
-    <div className="h-screen flex justify-center items-center ">
+    <div
+      className={`h-screen md:flex justify-center items-center md:mt-0 ${
+        isSignUp ? "mt-[35%]" : "mt-[25%]"
+      } `}
+    >
       <div className="relative p-1 md:border-[1px] lg:w-[900px] md:w-[700px] rounded-2xl ">
         <div className="flex justify-center items-center">
           <div className="md:flex-1/3">
@@ -47,16 +55,16 @@ const Account: React.FC<AccountProps> = ({
                 <Signup
                   step={step}
                   handleOTP={handleOTP}
-                  formData={formData}
-                  setFormData={setFormData}
-                  handleSignUp={handleSignUp}
+                  // formData={formData}
+                  // setFormData={setFormData}
+                  // handleSignUp={handleSignUp}
                 />
               ) : (
                 <Signin
                   step={step}
                   handleOTP={handleOTP}
-                  formData={formData}
-                  setFormData={setFormData}
+                  // formData={formData}
+                  // setFormData={setFormData}
                 />
               )}
 
