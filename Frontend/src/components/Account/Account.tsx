@@ -46,11 +46,15 @@ const Account: React.FC<AccountProps> = ({
   };
 
   return (
+<<<<<<< HEAD
     <div
       className={`h-screen md:flex justify-center items-center md:mt-0 ${
         isSignUp ? "mt-[35%]" : "mt-[25%]"
       } `}
     >
+=======
+    <div className={`h-screen md:flex justify-center items-center md:mt-0 ${isSignUp ? "mt-[35%]" : "mt-[25%]" } `}>
+>>>>>>> 97c579707a8241b658084c9ddbdae4a2f137c50f
       <div className="relative p-1 md:border-[1px] lg:w-[900px] md:w-[700px] rounded-2xl ">
         <div className="flex justify-center items-center">
           <div className="md:flex-1/3">
@@ -91,7 +95,7 @@ const Account: React.FC<AccountProps> = ({
           <div className="flex-1/2 md:block hidden">
             <img
               src={rightColumn}
-              className="h-[600px] w-[550px] "
+              className="lg:h-[600px] w-[550px] "
               alt="image"
             />
           </div>

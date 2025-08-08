@@ -4,10 +4,15 @@ import Account from "./components/Account/Account";
 import Note from "./components/Note/Note";
 import axios from "axios";
 import { toast } from "sonner";
+<<<<<<< HEAD
 import { useEffect, useState } from "react";
 import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes";
 import ErrorPage from "./error/Error";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+=======
+import { useState } from "react";
+import ErrorPage from "./pages/Error/Error";
+>>>>>>> 97c579707a8241b658084c9ddbdae4a2f137c50f
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -85,11 +90,15 @@ function App() {
           />
           <Route
             path="/Note"
+<<<<<<< HEAD
             element={
               <ProtectedRoute>
                 <Note />
               </ProtectedRoute>
             }
+=======
+            element={<Note formData={formData} setFormData={setFormData} />}
+>>>>>>> 97c579707a8241b658084c9ddbdae4a2f137c50f
           />
 
           <Route path="*" element={<ErrorPage />} />

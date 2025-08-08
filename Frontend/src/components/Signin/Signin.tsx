@@ -31,10 +31,14 @@ const Signin: React.FC<AccountProps> = ({
   const { formData, setFormData, setIsAuthenticated, } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [resendOtp, setResendOtp] = useState(false);
 
   const handleSendOtp = async () => {
     setLoading(true);
-    handleOTP();
+    await handleOTP();
+    setTimeout(() => {
+      setResendOtp(true);
+    }, 10000);
     setLoading(false);
   };
 
@@ -54,6 +58,8 @@ const Signin: React.FC<AccountProps> = ({
       toast.success((res.data as { message: string }).message);
     } catch (error) {
       console.error("Sign In failed.!", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,6 +70,10 @@ const Signin: React.FC<AccountProps> = ({
     } else {
       handleSignIn(e);
     }
+  };
+
+  const handleResendOtp = () => {
+    handleOTP();
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,6 +132,43 @@ const Signin: React.FC<AccountProps> = ({
           type="submit"
           className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed  p-2 w-full text-white rounded-lg cursor-pointer haver:bg-blue-600 transition ease-in .3s"
         >
+          {loading ? (
+            <div className="flex justify-center">
+              <svg
+                className="animate-spin h-6 w-6"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeDasharray="32"
+                  strokeDashoffset="32"
+                >
+                  <animate
+                    attributeName="stroke-dasharray"
+                    dur="2s"
+                    values="0 32;16 16;0 32;0 32"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="stroke-dashoffset"
+                    dur="2s"
+                    values="0;-16;-32;-32"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </svg>
+            </div>
+          ) : step === "initial" ? (
+            "Send OTP"
+          ) : (
+            "Sign In"
+          )}
           {loading ? (
             <div className="flex justify-center">
               <svg

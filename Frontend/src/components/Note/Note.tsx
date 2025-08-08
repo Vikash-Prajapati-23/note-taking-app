@@ -9,6 +9,7 @@ import NoteForm from "../Form/Form";
 import { useAuth } from "../../context/AuthContext";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
+<<<<<<< HEAD
 
 // interface FormData {
 //   fullName: string;
@@ -16,6 +17,14 @@ const baseUrl = import.meta.env.VITE_BASE_URL;
 //   dob: string;
 //   otp: string;
 // }
+=======
+interface FormData {
+  fullName: string;
+  email: string;
+  dob: string;
+  otp: string;
+}
+>>>>>>> 97c579707a8241b658084c9ddbdae4a2f137c50f
 
 interface NoteInput {
   _id: string;

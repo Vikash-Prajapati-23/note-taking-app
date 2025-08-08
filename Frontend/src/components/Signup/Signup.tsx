@@ -1,8 +1,12 @@
+<<<<<<< HEAD
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+=======
+import { useState } from "react";
+>>>>>>> 97c579707a8241b658084c9ddbdae4a2f137c50f
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -32,7 +36,10 @@ const SignupForm: React.FC<AccountProps> = ({
   const { formData, setFormData, setIsAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
   const [resendOtp, setResendOtp] = useState(false);
+<<<<<<< HEAD
   const navigate = useNavigate();
+=======
+>>>>>>> 97c579707a8241b658084c9ddbdae4a2f137c50f
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -43,7 +50,11 @@ const SignupForm: React.FC<AccountProps> = ({
 
   const handleSendOtp = async () => {
     setLoading(true);
+<<<<<<< HEAD
     handleOTP();
+=======
+    await handleOTP();
+>>>>>>> 97c579707a8241b658084c9ddbdae4a2f137c50f
     setTimeout(() => {
       setResendOtp(true);
     }, 10000);
@@ -53,6 +64,7 @@ const SignupForm: React.FC<AccountProps> = ({
   const handleVerifyOtp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+<<<<<<< HEAD
      try {
       const res = await axios.post(`${baseUrl}/api/auth/verify-otp`, formData, {
         withCredentials: true,
@@ -64,6 +76,9 @@ const SignupForm: React.FC<AccountProps> = ({
     } catch (error: any) {
       toast.error("Sign up failed, please try again.");
     }
+=======
+    await handleSignUp();
+>>>>>>> 97c579707a8241b658084c9ddbdae4a2f137c50f
     setLoading(false);
   };
 
@@ -110,24 +125,6 @@ const SignupForm: React.FC<AccountProps> = ({
             className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
             htmlFor="birth-date"
           >
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            title="EmailP"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full border p-2 rounded border-gray-400"
-          />
-        </div>
-
-        <div className="flex flex-col mb-5 relative ">
-          <label
-            className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
-            htmlFor="birth-date"
-          >
             Date of Birth
           </label>
           <input
@@ -141,8 +138,26 @@ const SignupForm: React.FC<AccountProps> = ({
           />
         </div>
 
+        <div className="flex flex-col mb-5 relative ">
+          <label
+            className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
+            htmlFor="birth-date"
+          >
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            title="EmailP"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            className="w-full border p-2 rounded border-gray-400"
+          />
+        </div>
+
         {step === "otp" && (
-          <div className="flex flex-col mb-5 relative ">
+          <div className="flex flex-col mb-2 relative ">
             <label
               className="text-gray-500 absolute text-xs px-1 bg-white top-[-16%] left-[4%] "
               htmlFor="password"
@@ -170,6 +185,50 @@ const SignupForm: React.FC<AccountProps> = ({
             Resend OTP
           </button>
         )}
+<<<<<<< HEAD
+=======
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed p-2 w-full text-white rounded-lg cursor-pointer transition ease-in .3s"
+        >
+          {loading ? (
+            <div className="flex justify-center">
+              <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24">
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeDasharray="32"
+                  strokeDashoffset="32"
+                >
+                  <animate
+                    attributeName="stroke-dasharray"
+                    dur="2s"
+                    values="0 32;16 16;0 32;0 32"
+                    repeatCount="indefinite"
+                  />
+                  <animate
+                    attributeName="stroke-dashoffset"
+                    dur="2s"
+                    values="0;-16;-32;-32"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </svg>
+            </div>
+          ) : step === "initial" ? (
+            "Send OTP"
+          ) : (
+            "Sign Up"
+          )}
+        </button>
+>>>>>>> 97c579707a8241b658084c9ddbdae4a2f137c50f
 
         <button
           disabled={loading}
