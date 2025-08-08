@@ -4,43 +4,18 @@ import Account from "./components/Account/Account";
 import Note from "./components/Note/Note";
 import axios from "axios";
 import { toast } from "sonner";
-<<<<<<< HEAD
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ProtectedRoute from "./components/ProtectedRoutes/ProtectedRoutes";
 import ErrorPage from "./error/Error";
-import { AuthProvider, useAuth } from "./context/AuthContext";
-=======
-import { useState } from "react";
-import ErrorPage from "./pages/Error/Error";
->>>>>>> 97c579707a8241b658084c9ddbdae4a2f137c50f
+import { useAuth } from "./context/AuthContext";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
-
-// interface FormData {
-//   fullName: string;
-//   email: string;
-//   dob: string;
-//   otp: string;
-// }
 
 type Step = "initial" | "otp";
 
 function App() {
-  // const navigate = useNavigate();
-  const { isAuthenticated, setIsAuthenticated, formData } = useAuth();
-  // const [formData, setFormData] = useState<FormData>({
-  //   fullName: "",
-  //   email: "",
-  //   dob: "",
-  //   otp: "",
-  // });
+  const { formData } = useAuth();
   const [step, setStep] = useState<Step>("initial");
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   setIsAuthenticated(!!token);
-  // }, []);
 
   const handleOTP = async () => {
     try {
@@ -56,54 +31,25 @@ function App() {
     }
   };
 
-  // const handleSignUp = async () => {
-  //   try {
-  //     const res = await axios.post(`${baseUrl}/api/auth/verify-otp`, formData, {
-  //       withCredentials: true,
-  //     });
-  //     toast.success((res.data as { message: string }).message);
-  //     setIsAuthenticated(true);
-  //     window.location.href = "/Note";
-  //   } catch (error: any) {
-  //     toast.error("Sign up failed, please try again.");
-  //   }
-  // };
-
   return (
     <>
       <Router>
-        {/* <AuthProvider > */}
-          
         <Routes>
           <Route
             path="/"
-            element={
-              <Account
-                step={step}
-                handleOTP={handleOTP}
-                // formData={formData}
-                // setFormData={setFormData}
-                // handleSignUp={handleSignUp}
-                // isAuthenticated={isAuthenticated}
-              />
-            }
+            element={<Account step={step} handleOTP={handleOTP} />}
           />
           <Route
             path="/Note"
-<<<<<<< HEAD
             element={
               <ProtectedRoute>
                 <Note />
               </ProtectedRoute>
             }
-=======
-            element={<Note formData={formData} setFormData={setFormData} />}
->>>>>>> 97c579707a8241b658084c9ddbdae4a2f137c50f
           />
 
           <Route path="*" element={<ErrorPage />} />
         </Routes>
-        {/* </AuthProvider> */}
       </Router>
     </>
   );

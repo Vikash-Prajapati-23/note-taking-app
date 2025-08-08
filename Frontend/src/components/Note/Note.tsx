@@ -9,22 +9,6 @@ import NoteForm from "../Form/Form";
 import { useAuth } from "../../context/AuthContext";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
-<<<<<<< HEAD
-
-// interface FormData {
-//   fullName: string;
-//   email: string;
-//   dob: string;
-//   otp: string;
-// }
-=======
-interface FormData {
-  fullName: string;
-  email: string;
-  dob: string;
-  otp: string;
-}
->>>>>>> 97c579707a8241b658084c9ddbdae4a2f137c50f
 
 interface NoteInput {
   _id: string;
@@ -49,21 +33,8 @@ interface CreateNotes {
   };
 }
 
-// interface AccountProps {
-//   formData: FormData;
-//   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
-//   // isAuthenticated: boolean;
-// }
-
-const Note = (
-  {
-    // formData,
-    // setFormData,
-    // isAuthenticated,
-  }
-) => {
-  const { formData, setFormData, logout } =
-    useAuth();
+const Note = ({}) => {
+  const { formData, setFormData, logout } = useAuth();
   const navigate = useNavigate();
   const [isCreate, setIsCreate] = useState(false);
   const [notes, setNotes] = useState<NoteInput>({
@@ -81,14 +52,6 @@ const Note = (
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // if (isAuthenticated) {
-  //   return <Navigate to="/Note" replace />;
-  // }
-  
-  // useEffect(() => {
-  //   checkAuth();
-  // }, []);
-
   const handleNavigate = () => {
     navigate("/Note");
   };
@@ -96,24 +59,6 @@ const Note = (
   const handleSignout = async () => {
     logout();
   };
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const res = await axios.get<{
-  //       userData: { fullName: string; email: string };
-  //     }>(`${baseUrl}/api/auth/me`, {
-  //       withCredentials: true,
-  //     });
-  //     const { fullName, email } = res.data.userData;
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       fullName,
-  //       email,
-  //     }));
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   // Notes related stuffs..!
   useEffect(() => {
