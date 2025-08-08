@@ -1,16 +1,16 @@
-// import axios from "axios";
+import axios from "axios"; // ✅ Uncomment this
 import React, {
   createContext,
   useContext,
+  useEffect,
   useState,
-//   useEffect,
   type ReactNode,
 } from "react";
-// import { Navigate } from "react-router-dom";
-// import { toast } from "sonner";
+import { toast } from "sonner";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
+type User = { fullName: string; email: string } | null;
 interface FormData {
   fullName: string;
   email: string;
@@ -19,23 +19,19 @@ interface FormData {
 }
 
 interface AuthContextType {
+  user: User;
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   isAuthenticated: boolean;
   setIsAuthenticated: (value: boolean) => void;
-//   checkAuthStatus: () => void;
-//   handleSignUp: () => void;
-//   login: () => void;
-//   logout: () => void;
+  checkAuth: () => void;
+  logout: () => void;
+  loading: boolean; // ✅ Add loading state
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [formData, setFormData] = useState<FormData>({
     fullName: "",
     email: "",
@@ -43,66 +39,63 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     otp: "",
   });
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [user, setUser] = useState<User>(null);
+  const [loading, setLoading] = useState<boolean>(true); // ✅ Add loading state
 
-  // Check auth status by calling your backend
-//   const checkAuthStatus = async () => {
-//     try {
-//       const response = await axios.get(`${baseUrl}/api/auth/verify-otp`, {
-//         withCredentials: true, // Send cookies
-//       });
+  interface FetchUserResp { 
+    userData: { fullName: string; email: string }; 
+    message: string; 
+  }
 
-//       // If backend responds successfully, user is authenticated
-//       setIsAuthenticated(true);
-//     } catch (error) {
-//       // If backend returns 401/403, user is not authenticated
-//       setIsAuthenticated(false);
-//     }
-//   };
+  const checkAuth = async () => {
+    try {
+      setLoading(true); // ✅ Set loading to true
+      const res = await axios.get<FetchUserResp>(`${baseUrl}/api/auth/me`, {
+        withCredentials: true,
+      });
+      setUser(res.data.userData);
+      setIsAuthenticated(true);
+      setFormData(prev => ({ 
+        ...prev, 
+        fullName: res.data.userData.fullName, 
+        email: res.data.userData.email 
+      }));
+    } catch (err) {
+      setUser(null);
+      setIsAuthenticated(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//   const handleSignUp = async () => {
-//     try {
-//       const res = await axios.post(`${baseUrl}/api/auth/verify-otp`, formData, {
-//         withCredentials: true,
-//       });
-//       toast.success((res.data as { message: string }).message);
-//       setIsAuthenticated(true);
-//       window.location.href = "/Note";
-//     } catch (error: any) {
-//       toast.error("Sign up failed, please try again.");
-//     }
-//   };
+  useEffect(() => {
+    checkAuth(); // runs once on app load to restore session from cookie
+  }, []);
 
-//   const login = async () => {
-//     try {
-//       const res = await axios.post(`${baseUrl}/api/auth/sign-in`, formData, {
-//         withCredentials: true,
-//       });
-//       toast.success((res.data as { message: string }).message);
-//       setIsAuthenticated(true);
-//       window.location.href = "/Note";
-//     } catch (error: any) {
-//         toast.error("Sign up failed, please try again.");
-//     }
-//     // localStorage.setItem("token", token);
-//     // setIsAuthenticated(true);
-//   };
-
-//   const logout = () => {
-//     setIsAuthenticated(false);
-//     return <Navigate to="/Note" replace />;
-//   };
+  const logout = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}/api/auth/handle-sign-out`, {
+        withCredentials: true,
+      });
+      toast.success((response.data as { message: string }).message);
+      setUser(null);
+      setIsAuthenticated(false);
+    } catch (error) {
+      toast.error("Logout failed.");
+    }
+  };
 
   return (
     <AuthContext.Provider
       value={{
-        // checkAuthStatus,
+        user,
+        checkAuth,
         formData,
         isAuthenticated,
         setIsAuthenticated,
         setFormData,
-        // handleSignUp,
-        // login,
-        // logout,
+        logout,
+        loading, // ✅ Provide loading state
       }}
     >
       {children}
@@ -110,7 +103,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   );
 };
 
-// Custom hook to use auth context
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {

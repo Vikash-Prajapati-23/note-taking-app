@@ -59,7 +59,7 @@ const SignupForm: React.FC<AccountProps> = ({
       });
       toast.success((res.data as { message: string }).message);
       setIsAuthenticated(true);
-      navigate("/Note");
+      navigate("/Note", { replace: true });
       // window.location.href = "/Note";
     } catch (error: any) {
       toast.error("Sign up failed, please try again.");

@@ -4,6 +4,7 @@ import rightColumn from "../../assets/right-column.png";
 import logo from "../../assets/top.png";
 import { useState } from "react";
 // import { useAuth } from "../../context/AuthContext";
+// import { useAuth } from "../../context/AuthContext";
 
 type Step = "initial" | "otp";
 
@@ -17,6 +18,7 @@ type Step = "initial" | "otp";
 interface AccountProps {
   step: Step;
   handleOTP: () => Promise<void>;
+  // checkAuth: () => Promise<void>;
   // formData: FormData;
   // setFormData: React.Dispatch<React.SetStateAction<FormData>>;
   // handleSignUp: () => Promise<void>;
@@ -31,8 +33,13 @@ const Account: React.FC<AccountProps> = ({
   // handleSignUp,
   // isAuthenticated,
 }) => {
-  const [isSignUp, setIsSighnUp] = useState(false);
+  // const { checkAuth } = useAuth();
+  const [isSignUp, setIsSighnUp,] = useState(false);
   // const { isAuthenticated, handleSignUp } = useAuth();
+
+  // useEffect(() => {
+  //   checkAuth();
+  // }, []);
 
   const handleToggle = () => {
     setIsSighnUp((sign) => (sign = !sign));

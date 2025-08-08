@@ -1,11 +1,11 @@
-// ProtectedRoute.tsx
-import { Navigate } from "react-router-dom";
-import type { JSX } from "react/jsx-runtime";
+// // ProtectedRoute.tsx
+// import { Navigate } from "react-router-dom";
+// import type { JSX } from "react/jsx-runtime";
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const isAuthenticated = localStorage.getItem("token");
+// const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+//   const isAuthenticated = localStorage.getItem("token");
 
-  return isAuthenticated ? children : <Navigate to="/" replace />;
-};
+//   return isAuthenticated ? children : <Navigate to="/" replace />;
+// };
 
-export default ProtectedRoute;
+// export default ProtectedRoute;

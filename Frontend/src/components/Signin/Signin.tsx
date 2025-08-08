@@ -50,7 +50,7 @@ const Signin: React.FC<AccountProps> = ({
         }
       );
       setIsAuthenticated(true);
-      navigate("/Note");
+      navigate("/Note", { replace: true });
       toast.success((res.data as { message: string }).message);
     } catch (error) {
       console.error("Sign In failed.!", error);

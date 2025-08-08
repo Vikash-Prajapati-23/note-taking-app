@@ -1,4 +1,4 @@
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import logo from "../../assets/top-2.png";
 import delete_btn from "../../assets/delete.png";
 import "./Note.css";
@@ -53,7 +53,7 @@ const Note = (
     // isAuthenticated,
   }
 ) => {
-  const { formData, setFormData, isAuthenticated, logout } =
+  const { formData, setFormData, logout } =
     useAuth();
   const navigate = useNavigate();
   const [isCreate, setIsCreate] = useState(false);
@@ -75,40 +75,36 @@ const Note = (
   // if (isAuthenticated) {
   //   return <Navigate to="/Note" replace />;
   // }
+  
+  // useEffect(() => {
+  //   checkAuth();
+  // }, []);
 
   const handleNavigate = () => {
     navigate("/Note");
   };
 
   const handleSignout = async () => {
-    try {
-      const response = await axios.get(`${baseUrl}/api/auth/handle-sign-out`, {
-        withCredentials: true,
-      });
-      toast.success((response.data as { message: string }).message);
-      logout();
-    } catch (error) {
-      toast.error("Logout failed.");
-    }
+    logout();
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await axios.get<{
-        userData: { fullName: string; email: string };
-      }>(`${baseUrl}/api/auth/me`, {
-        withCredentials: true,
-      });
-      const { fullName, email } = res.data.userData;
-      setFormData((prev) => ({
-        ...prev,
-        fullName,
-        email,
-      }));
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const res = await axios.get<{
+  //       userData: { fullName: string; email: string };
+  //     }>(`${baseUrl}/api/auth/me`, {
+  //       withCredentials: true,
+  //     });
+  //     const { fullName, email } = res.data.userData;
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       fullName,
+  //       email,
+  //     }));
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   // Notes related stuffs..!
   useEffect(() => {
