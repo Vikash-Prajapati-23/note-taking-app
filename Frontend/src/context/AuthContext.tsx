@@ -80,6 +80,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       toast.success((response.data as { message: string }).message);
       setUser(null);
       setIsAuthenticated(false);
+      setFormData({
+        fullName: "",
+        email: "",
+        dob: "",
+        otp: "",
+      });
+      window.location.href = "/";
     } catch (error) {
       toast.error("Logout failed.");
     }

@@ -105,10 +105,11 @@ export function handleLogout(req, res) {
   }
 
   if (token) {
-    res.clearCookie("authToken", token, {
+    res.clearCookie("authToken", {
       httpOnly: true,
       sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production",
+      path: "/",
     });
     return res.status(200).json({ message: "Logout successfully." });
   } else {
