@@ -28,7 +28,7 @@ const Signin: React.FC<AccountProps> = ({
   // formData,
   // setFormData,
 }) => {
-  const { formData, setFormData, setIsAuthenticated, } = useAuth();
+  const { formData, setFormData, setIsAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [resendOtp, setResendOtp] = useState(false);
@@ -49,9 +49,7 @@ const Signin: React.FC<AccountProps> = ({
       const res = await axios.post(
         `${baseUrl}/api/auth/handle-sign-in`,
         formData,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true, }
       );
       setIsAuthenticated(true);
       navigate("/Note", { replace: true });
@@ -67,6 +65,9 @@ const Signin: React.FC<AccountProps> = ({
     e.preventDefault();
     if (step === "initial") {
       handleSendOtp();
+      setTimeout(() => {
+        setResendOtp(true);
+      }, 10000);
     } else {
       handleSignIn(e);
     }
@@ -127,6 +128,16 @@ const Signin: React.FC<AccountProps> = ({
           </div>
         )}
 
+        {resendOtp && (
+          <button
+            className="text-blue-500 underline mb-5 cursor-pointer"
+            onClick={handleResendOtp}
+            type="button"
+          >
+            Resend OTP
+          </button>
+        )}
+
         <button
           disabled={loading}
           type="submit"
@@ -134,47 +145,7 @@ const Signin: React.FC<AccountProps> = ({
         >
           {loading ? (
             <div className="flex justify-center">
-              <svg
-                className="animate-spin h-6 w-6"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeDasharray="32"
-                  strokeDashoffset="32"
-                >
-                  <animate
-                    attributeName="stroke-dasharray"
-                    dur="2s"
-                    values="0 32;16 16;0 32;0 32"
-                    repeatCount="indefinite"
-                  />
-                  <animate
-                    attributeName="stroke-dashoffset"
-                    dur="2s"
-                    values="0;-16;-32;-32"
-                    repeatCount="indefinite"
-                  />
-                </circle>
-              </svg>
-            </div>
-          ) : step === "initial" ? (
-            "Send OTP"
-          ) : (
-            "Sign In"
-          )}
-          {loading ? (
-            <div className="flex justify-center">
-              <svg
-                className="animate-spin h-6 w-6"
-                viewBox="0 0 24 24"
-              >
+              <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24">
                 <circle
                   cx="12"
                   cy="12"

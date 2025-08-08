@@ -53,7 +53,7 @@ const SignupForm: React.FC<AccountProps> = ({
   const handleVerifyOtp = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-     try {
+    try {
       const res = await axios.post(`${baseUrl}/api/auth/verify-otp`, formData, {
         withCredentials: true,
       });
@@ -178,10 +178,7 @@ const SignupForm: React.FC<AccountProps> = ({
         >
           {loading ? (
             <div className="flex justify-center">
-              <svg
-                className="animate-spin h-6 w-6"
-                viewBox="0 0 24 24"
-              >
+              <svg className="animate-spin h-6 w-6" viewBox="0 0 24 24">
                 <circle
                   cx="12"
                   cy="12"
